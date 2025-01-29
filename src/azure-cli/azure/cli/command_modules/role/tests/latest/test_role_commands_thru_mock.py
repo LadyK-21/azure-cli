@@ -75,7 +75,7 @@ MOCKED_SP = {
     'appId': MOCKED_APP_APP_ID
 }
 
-# Example from https://docs.microsoft.com/en-us/graph/api/serviceprincipal-addpassword
+# Example from https://learn.microsoft.com/en-us/graph/api/serviceprincipal-addpassword
 MOCKED_ADD_PASSWORD_RESULT = {
     "customKeyIdentifier": None,
     "endDateTime": "2021-09-09T19:50:29.3086381Z",
@@ -286,7 +286,7 @@ class TestRoleMocked(unittest.TestCase):
         key_id_of_existing_cert = 'existing cert'
         name = 'http://mysp'
 
-        def application_patch_mock(id, body):
+        def application_update_mock(id, body):
             patch_invoked[0] = True
             self.assertEqual(id, MOCKED_APP_ID)
             self.assertEqual(2, len(body['keyCredentials']))
@@ -309,14 +309,14 @@ class TestRoleMocked(unittest.TestCase):
         faked_graph_client.tenant = MOCKED_TENANT_ID
         faked_graph_client.application_list.return_value = [MOCKED_APP]
         faked_graph_client.application_get.side_effect = [MOCKED_APP]
-        faked_graph_client.application_patch.side_effect = application_patch_mock
+        faked_graph_client.application_update.side_effect = application_update_mock
 
         # action
         result = reset_application_credential(cmd, faked_graph_client, MOCKED_APP_APP_ID, cert=test_cert, append=True,
                                               display_name=MOCKED_CREDENTIAL_DISPLAY_NAME)
 
         # assert
-        faked_graph_client.application_patch.assert_called_once()
+        faked_graph_client.application_update.assert_called_once()
         assert result == {
             'appId': MOCKED_APP_APP_ID,
             'password': None,
@@ -337,7 +337,7 @@ class TestRoleMocked(unittest.TestCase):
             create_service_principal_for_rbac(cmd, 'will-fail')
 
         # assert we handled such error
-        self.assertTrue('https://docs.microsoft.com/azure/azure-resource-manager/resource-group-create-service-principal-portal' in str(context.exception))
+        self.assertTrue('https://learn.microsoft.com/azure/azure-resource-manager/resource-group-create-service-principal-portal' in str(context.exception))
 
     @mock.patch('azure.cli.command_modules.role.custom._auth_client_factory', autospec=True)
     @mock.patch('azure.cli.command_modules.role.custom._graph_client_factory', autospec=True)
@@ -383,14 +383,12 @@ class TestRoleMocked(unittest.TestCase):
         assert len(result) == 1
         assert result[0]['id'] == MOCKED_USER_ID
 
-    @mock.patch('azure.cli.command_modules.role.custom._auth_client_factory', autospec=True)
-    @mock.patch('knack.prompting.prompt_y_n', autospec=True)
-    def test_role_assignment_delete_prompt(self, prompt_mock, client_mock):
-        prompt_mock.return_value = False
-        # action
-        delete_role_assignments(mock.MagicMock())
-        # assert
-        prompt_mock.assert_called_once_with(mock.ANY, 'n')
+    def test_role_assignment_delete_no_args_raise_error(self):
+        from azure.cli.core.azclierror import ArgumentUsageError
+        with self.assertRaises(ArgumentUsageError):
+            delete_role_assignments(mock.MagicMock())
+        with self.assertRaises(ArgumentUsageError):
+            delete_role_assignments(mock.MagicMock(), yes=True)
 
     @mock.patch('azure.cli.command_modules.role.custom._graph_client_factory', autospec=True)
     def test_role_list_app_owner(self, graph_client_mock):

@@ -2,23 +2,19 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
+
 import json
-import os
-import sys
-from unittest import mock
 import unittest
-import datetime
-import dateutil
-import dateutil.parser
+from unittest import mock
+
+from azure.cli.testsdk import MSGraphNameReplacer
+from ..util import MSGraphUpnReplacer
+from azure.cli.testsdk import ScenarioTest, LiveScenarioTest
 from azure.cli.testsdk.scenario_tests import AllowLargeResponse
-from azure.cli.testsdk.scenario_tests.const import MOCKED_TENANT_ID
-from azure.cli.testsdk import ScenarioTest, MSGraphUserReplacer, MOCKED_USER_NAME
-from knack.util import CLIError
-from azure.cli.testsdk import ScenarioTest, LiveScenarioTest, ResourceGroupPreparer, KeyVaultPreparer
 
 
 # This test example is from
-# https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps#example-user-app-role
+# https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps#example-user-app-role
 TEST_APP_ROLES = '''[
     {
         "allowedMemberTypes": [
@@ -40,10 +36,11 @@ TEST_APP_ROLES = '''[
         "description": "Consumer apps have access to the consumer data.",
         "value": "Consumer"
     }
-]'''
+]
+'''
 
 # This test example is from
-# https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-optional-claims#configuring-optional-claims
+# https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-optional-claims#configuring-optional-claims
 TEST_OPTIONAL_CLAIMS = '''{
     "idToken": [
         {
@@ -68,7 +65,8 @@ TEST_OPTIONAL_CLAIMS = '''{
             "essential": false
         }
     ]
-}'''
+}
+'''
 
 TEST_REQUIRED_RESOURCE_ACCESS = '''[
     {
@@ -93,7 +91,22 @@ TEST_REQUIRED_RESOURCE_ACCESS = '''[
         ],
         "resourceAppId": "00000003-0000-0000-c000-000000000000"
     }
-]'''
+]
+'''
+
+# This test example is from
+# https://learn.microsoft.com/en-us/azure/active-directory/develop/workload-identity-federation-create-trust-github?tabs=microsoft-graph
+TEST_FEDERATED_IDENTITY_CREDENTIAL = '''{
+    "name": "Testing",
+    "issuer": "https://token.actions.githubusercontent.com/",
+    "subject": "repo:octo-org/octo-repo:environment:Production",
+    "description": "Testing",
+    "audiences": [
+        "api://AzureADTokenExchange"
+    ]
+}
+'''
+
 
 # TODO: https://github.com/Azure/azure-cli/pull/13769 fails to work
 # Cert created with
@@ -195,7 +208,7 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
         display_name = self.create_random_name(prefix='azure-cli-test', length=30)
 
         # identifierUris must be on verified domain
-        # https://docs.microsoft.com/en-us/azure/active-directory/develop/security-best-practices-for-app-registration#appid-uri-configuration
+        # https://learn.microsoft.com/en-us/azure/active-directory/develop/security-best-practices-for-app-registration#appid-uri-configuration
         self.kwargs.update({
             'display_name': display_name,
             'identifier_uri': f'api://{display_name}',
@@ -208,6 +221,8 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
             'app_roles': TEST_APP_ROLES,
             'optional_claims': TEST_OPTIONAL_CLAIMS,
             'required_resource_accesses': TEST_REQUIRED_RESOURCE_ACCESS,
+            'service_management_reference': '96524024-75b0-497b-ab38-0381399a6a9d',
+            'requested_access_token_version': 2
         })
 
         # Create
@@ -215,7 +230,10 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
             'ad app create --display-name {display_name} '
             '--identifier-uris {identifier_uri} '
             '--is-fallback-public-client True '
+            '--service-management-reference {service_management_reference} '
             '--sign-in-audience AzureADMultipleOrgs '
+            # api
+            '--requested-access-token-version {requested_access_token_version} '
             # web
             '--web-home-page-url {homepage} '
             '--web-redirect-uris {web_redirect_uri_1} {web_redirect_uri_2} '
@@ -232,7 +250,9 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
                 self.check('displayName', '{display_name}'),
                 self.check('identifierUris[0]', '{identifier_uri}'),
                 self.check('isFallbackPublicClient', True),
+                self.check('serviceManagementReference', '{service_management_reference}'),
                 self.check('signInAudience', 'AzureADMultipleOrgs'),
+                self.check('api.requestedAccessTokenVersion', '{requested_access_token_version}'),
                 self.check('web.homePageUrl', '{homepage}'),
                 self.check('web.redirectUris[0]', '{web_redirect_uri_1}'),
                 self.check('web.redirectUris[1]', '{web_redirect_uri_2}'),
@@ -268,8 +288,11 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
             'ad app update --id {app_id} --display-name {display_name_3} '
             '--identifier-uris {identifier_uri_3} '
             '--is-fallback-public-client True '
+            '--service-management-reference {service_management_reference} '
             # signInAudience can't be PATCHed currently due to service issue. PATCH first fails with 404, then 500
             # '--sign-in-audience AzureADMultipleOrgs '
+            # api
+            '--requested-access-token-version {requested_access_token_version} '
             # web
             '--web-home-page-url {homepage} '
             '--web-redirect-uris {web_redirect_uri_1} {web_redirect_uri_2} '
@@ -288,7 +311,11 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
                 self.check('displayName', '{display_name_3}'),
                 self.check('identifierUris[0]', '{identifier_uri_3}'),
                 self.check('isFallbackPublicClient', True),
+                self.check('serviceManagementReference', '{service_management_reference}'),
                 # self.check('signInAudience', 'AzureADMultipleOrgs'),
+                # api
+                self.check('api.requestedAccessTokenVersion', '{requested_access_token_version}'),
+                # web
                 self.check('web.homePageUrl', '{homepage}'),
                 # redirectUris doesn't preserve item order.
                 # self.check('web.redirectUris[0]', '{web_redirect_uri_1}'),
@@ -305,18 +332,44 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
                 self.check('length(requiredResourceAccess)', 2)
             ]).get_output_in_json()
 
+        # Update with generic update
+        self.cmd('ad app update --id {app_id} --set isDeviceOnlyAuthSupported=true')
+        self.cmd('ad app show --id {app_id}', checks=self.check('isDeviceOnlyAuthSupported', True))
+
         self.cmd('ad app delete --id {app_id}')
         self.cmd('ad app show --id {app_id}', expect_failure=True)
 
     def test_app_create_idempotent(self):
         self.kwargs = {
-            'display_name': self.create_random_name('app', 20)
+            'display_name': self.create_random_name('azure-cli-test', 30),
+            'service_management_reference': '96524024-75b0-497b-ab38-0381399a6a9d',
+            'requested_access_token_version': 2
         }
-        result = self.cmd("ad app create --display-name {display_name} --is-fallback-public-client true").get_output_in_json()
+
+        # These properties' values are null by default
+        result = self.cmd(
+            'ad app create --display-name {display_name} ',
+            checks=[
+                self.check('isFallbackPublicClient', None),
+                self.check('serviceManagementReference', None),
+                # api
+                self.check('api.requestedAccessTokenVersion', None),
+            ]).get_output_in_json()
         self.kwargs['app_id'] = result['appId']
-        self.cmd("ad app create --display-name {display_name} --is-fallback-public-client false",
-                 checks=[self.check('isFallbackPublicClient', False),
-                         self.check('appId', '{app_id}')])
+
+        self.cmd(
+            'ad app create --display-name {display_name} '
+            '--is-fallback-public-client true '
+            '--service-management-reference {service_management_reference} '
+            # api
+            '--requested-access-token-version {requested_access_token_version}',
+            checks=[
+                self.check('appId', '{app_id}'),
+                self.check('isFallbackPublicClient', True),
+                self.check('serviceManagementReference', '{service_management_reference}'),
+                # api
+                self.check('api.requestedAccessTokenVersion', '{requested_access_token_version}'),
+            ])
 
     def test_app_resolution(self):
         """Test application can be resolved with identifierUris, appId, or id."""
@@ -359,7 +412,7 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
             'owner': owner,
             'display_name': self.create_random_name('azure-cli-test', 30)
         }
-        self.recording_processors.append(MSGraphUserReplacer(owner, 'example@example.com'))
+        self.recording_processors.append(MSGraphNameReplacer(owner, 'example@example.com'))
 
         self.kwargs['owner_object_id'] = self.cmd('ad user show --id {owner}').get_output_in_json()['id']
         self.kwargs['app_id'] = self.cmd('ad app create --display-name {display_name}').get_output_in_json()['appId']
@@ -518,6 +571,13 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
         self.assertEqual(microsoft_graph_api_object['resourceAccess'],
                          [microsoft_graph_permission1_object, microsoft_graph_permission2_object])
 
+        # Test permission type '=Scope' is missing
+        from azure.cli.core.azclierror import ArgumentUsageError
+        with self.assertRaisesRegex(ArgumentUsageError, 'both permission id and type'):
+            self.cmd('ad app permission add --id {app_id} '
+                     '--api {microsoft_graph_api} '
+                     '--api-permissions {microsoft_graph_permission1}')
+
     @AllowLargeResponse()
     def test_app_permission_grant(self):
         if not self._get_signed_in_user():
@@ -579,6 +639,40 @@ class ApplicationScenarioTest(GraphScenarioTestBase):
         self.cmd('ad app permission delete --id {app_id} --api {microsoft_graph_api}')
         self.cmd('ad app permission list --id {app_id}', checks=self.check('length([*])', 0))
 
+    def test_app_federated_credential(self):
+        self._create_app()
+        self.kwargs['parameters'] = TEST_FEDERATED_IDENTITY_CREDENTIAL
+        self.kwargs['name'] = 'Testing'
+
+        # Create credential
+        result = self.cmd("ad app federated-credential create --id {app_id} --parameters '{parameters}'",
+                          checks=[self.check('name', '{name}')]).get_output_in_json()
+        self.kwargs['credential_id'] = result['id']
+
+        # List credential
+        self.cmd("ad app federated-credential list --id {app_id}",
+                 checks=[self.check('length(@)', 1)])
+
+        # Show credential with credential ID
+        self.cmd("ad app federated-credential show --id {app_id} --federated-credential-id {credential_id}",
+                 checks=[self.check('name', '{name}')])
+        # Show with credential name
+        self.cmd("ad app federated-credential show --id {app_id} --federated-credential-id {name}",
+                 checks=[self.check('name', '{name}')])
+
+        # Update credential's subject
+        update_subject = "repo:octo-org/octo-repo:environment:Staging"
+        self.kwargs['update_json'] = json.dumps({'subject': update_subject})
+        self.cmd("ad app federated-credential update --id {app_id} --federated-credential-id {credential_id} "
+                 "--parameters '{update_json}'")
+        self.cmd("ad app federated-credential show --id {app_id} --federated-credential-id {credential_id}",
+                 checks=self.check('subject', update_subject))
+
+        # Delete credential
+        self.cmd("ad app federated-credential delete --id {app_id} --federated-credential-id {credential_id}")
+        self.cmd("ad app federated-credential list --id {app_id}",
+                 checks=[self.check('length(@)', 0)])
+
 
 class ServicePrincipalScenarioTest(GraphScenarioTestBase):
 
@@ -616,6 +710,10 @@ class ServicePrincipalScenarioTest(GraphScenarioTestBase):
         # Show with id
         self.cmd('ad sp show --id {id}')
 
+        # Update with generic update
+        self.cmd('ad sp update --id {id} --set appRoleAssignmentRequired=true')
+        self.cmd('ad sp show --id {id}', checks=self.check('appRoleAssignmentRequired', True))
+
         self.cmd('ad sp delete --id {app_id}')
         self.cmd('ad app delete --id {app_id}')
 
@@ -644,6 +742,11 @@ class ServicePrincipalScenarioTest(GraphScenarioTestBase):
     def test_sp_credential(self):
         self._create_sp()
         self._test_credential('sp')
+
+    @unittest.skip("It seems sp doesn't work with federatedIdentityCredentials yet.")
+    def test_sp_federated_credential(self):
+        self._create_sp()
+        self._test_federated_credential('sp')
 
 
 class UserScenarioTest(GraphScenarioTestBase):
@@ -701,9 +804,6 @@ class UserScenarioTest(GraphScenarioTestBase):
         self.cmd('ad user get-member-groups --id {user1_id}',
                  checks=self.check('[0].displayName', self.kwargs['group']))
 
-        # list
-        self.cmd('ad user list')
-
         # delete
         self.cmd('ad user delete --id {user1_id}')
 
@@ -738,7 +838,7 @@ class GroupScenarioTest(GraphScenarioTestBase):
             'app_name': self.create_random_name(prefix='testgroupapp', length=24)
         }
 
-        self.recording_processors.append(MSGraphUserReplacer('@' + domain, '@example.com'))
+        self.recording_processors.append(MSGraphNameReplacer('@' + domain, '@example.com'))
         try:
             # create group
             group_result = self.cmd(
@@ -864,7 +964,77 @@ class GroupScenarioTest(GraphScenarioTestBase):
                 self.clean_resource(self.kwargs['app_id'], type='app')
 
 
+class MiscellaneousScenarioTest(GraphScenarioTestBase):
+    def test_special_characters_in_query(self):
+        # Test special characters in object names. Ensure these characters are correctly percent-encoded.
+        # For example, displayName with +(%2B), /(%2F)
+        from azure.cli.testsdk.scenario_tests.utilities import create_random_name
+        prefix = 'azure-cli-test-group+/'
+        mock_name = prefix + '000001'
+        if self.in_recording:
+            display_name = create_random_name(prefix=prefix, length=32)
+            self.recording_processors.append(MSGraphNameReplacer(display_name, mock_name))
+        else:
+            display_name = mock_name
+
+        self.kwargs = {
+            'display_name': display_name,
+            'mail_nick_name': 'deleteme11'
+        }
+        self.cmd('ad group create --display-name {display_name} --mail-nickname {mail_nick_name}',
+                 checks=self.check('displayName', '{display_name}'))
+        self.cmd('ad group show --group {display_name}',
+                 checks=self.check('displayName', '{display_name}'))
+        self.cmd('ad group list --display-name {display_name}',
+                 checks=[self.check('length(@)', 1),
+                         self.check('[0].displayName', '{display_name}')])
+        self.cmd('ad group delete --group {display_name}')
+        self.cmd('ad group list --display-name {display_name}',
+                 checks=self.check('length(@)', 0))
+
+    def test_special_characters_in_upn(self):
+        # Test special characters in upn
+        from azure.cli.testsdk.scenario_tests.utilities import create_random_name
+        prefix = '$azure-cli-test-user#'
+        mock_name = prefix + '000001'
+        if self.in_recording:
+            display_name = create_random_name(prefix=prefix, length=32)
+            self.recording_processors.append(MSGraphNameReplacer(display_name, mock_name))
+            self.recording_processors.append(MSGraphUpnReplacer(display_name, mock_name))
+        else:
+            display_name = mock_name
+
+        self.kwargs = {
+            'display_name': display_name,
+            'upn': f'{display_name}@AzureSDKTeam.onmicrosoft.com',
+            'password': self.create_random_name(prefix='password-', length=40),
+        }
+        self.cmd('ad user create --display-name {display_name} --password {password} '
+                 '--user-principal-name {upn}',
+                 checks=self.check('displayName', '{display_name}'))
+
+        self.cmd('ad user update --id {upn} --force-change-password-next-sign-in true')
+
+        self.cmd('ad user show --id {upn}',
+                 checks=self.check('displayName', '{display_name}'))
+
+        self.cmd('ad user list --display-name {display_name}',
+                 checks=self.check('[0].displayName', '{display_name}'))
+
+        self.cmd('ad user get-member-groups --id {upn}',
+                 checks=self.is_empty())
+
+        self.cmd('ad user delete --id {upn}')
+
+
+class GraphLiveScenarioTest(LiveScenarioTest):
+    # Only test list commands in live mode to avoid recording tenant information
+
+    def test_user_list(self):
+        self.cmd('ad user list')
+
+
 def _get_id_from_value(permissions, value):
     """Get id from value for appRoles or oauth2PermissionScopes."""
-    # https://docs.microsoft.com/en-us/graph/api/resources/serviceprincipal?view=graph-rest-1.0#properties
+    # https://learn.microsoft.com/en-us/graph/api/resources/serviceprincipal?view=graph-rest-1.0#properties
     return next(p['id'] for p in permissions if p['value'] == value)

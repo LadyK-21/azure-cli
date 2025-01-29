@@ -10,6 +10,7 @@ import unittest
 import os
 from pytest import skip
 import requests
+from knack.util import CLIError
 
 from azure.cli.testsdk.scenario_tests import AllowLargeResponse
 from azure.cli.testsdk import (
@@ -51,10 +52,11 @@ class WebAppUpE2ETests(ScenarioTest):
             JMESPathCheck('resourceGroup', resource_group)
         ])
 
-        self.cmd('webapp config show', checks=[
-            JMESPathCheck('linuxFxVersion', 'NODE|12-lts'),
+        config = self.cmd('webapp config show', checks=[
             JMESPathCheck('tags.cli', 'None'),
-        ])
+        ]).get_output_in_json()
+
+        self.assertIn("node", config.get("linuxFxVersion", "").lower())
 
         self.cmd('webapp config appsettings list', checks=[
             JMESPathCheck('[0].name', 'SCM_DO_BUILD_DURING_DEPLOYMENT'),
@@ -137,7 +139,7 @@ class WebAppUpE2ETests(ScenarioTest):
         self.assertTrue(result['name'].startswith(webapp_name))
         self.assertTrue(result['src_path'].replace(
             os.sep + os.sep, os.sep), up_working_dir)
-        self.assertEqual(result['runtime_version'].lower(), 'node|12-lts')
+        self.assertIn("node|", result['runtime_version'].lower())
         self.assertEqual(result['os'].lower(), 'linux')
 
         # test the full E2E operation works
@@ -154,10 +156,10 @@ class WebAppUpE2ETests(ScenarioTest):
             JMESPathCheck('resourceGroup', resource_group)
         ])
 
-        self.cmd('webapp config show', checks=[
-            JMESPathCheck('linuxFxVersion', 'NODE|12-lts'),
+        config = self.cmd('webapp config show', checks=[
             JMESPathCheck('tags.cli', 'None'),
-        ])
+        ]).get_output_in_json()
+        self.assertIn("node", config.get("linuxFxVersion", "").lower())
 
         self.cmd('webapp config appsettings list', checks=[
             JMESPathCheck('[0].name', 'SCM_DO_BUILD_DURING_DEPLOYMENT'),
@@ -458,6 +460,78 @@ class WebAppUpE2ETests(ScenarioTest):
 
     @live_only()
     @ResourceGroupPreparer(random_name_length=24, name_prefix='clitest', location=WINDOWS_ASP_LOCATION_WEBAPP)
+    def test_webapp_up_dotnet6_e2e(self, resource_group):
+        plan = self.create_random_name('up-dotnetplan', 24)
+        webapp_name = self.create_random_name('up-dotnetapp', 24)
+        zip_file_name = os.path.join(TEST_DIR, 'dotnet6-webapi-with-dependencies-up.zip')
+
+        # create a temp directory and unzip the code to this folder
+        import zipfile
+        import tempfile
+        temp_dir = tempfile.mkdtemp()
+        zip_ref = zipfile.ZipFile(zip_file_name, 'r')
+        zip_ref.extractall(temp_dir)
+        current_working_dir = os.getcwd()
+
+        # change the working dir to the dir where the WebApplication has been extracted to.
+        # the zip contains more than one projects, it is assumed that the user is in this directory
+        # when he makes the webapp up.
+        up_working_dir = temp_dir
+        os.chdir(os.join(up_working_dir, "WebApplication1"))
+
+        # test dryrun operation
+        result = self.cmd('webapp up -n {} --dryrun --os-type Linux'
+                          .format(webapp_name)).get_output_in_json()
+        self.assertEqual(result['sku'].lower(), 'free')
+        self.assertTrue(result['name'].startswith(webapp_name))
+        self.assertTrue(result['src_path'].replace(
+            os.sep + os.sep, os.sep), up_working_dir)
+        self.assertEqual(result['runtime_version'].lower(), 'dotnetcore|6.0')
+        self.assertEqual(result['os'].lower(), 'linux')
+        self.assertNotEqual(result['location'], 'None')
+
+        # test the full E2E operation works
+        full_result = self.cmd(
+            'webapp up -n {} -g {} --plan {}'.format(webapp_name, resource_group, plan)).get_output_in_json()
+        self.assertEqual(result['name'], full_result['name'])
+        self.assertEqual(result['location'], full_result['location'])
+
+        # Verify app is created
+        # since we set local context, -n and -g are no longer required
+        self.cmd('webapp show', checks=[
+            JMESPathCheck('name', webapp_name),
+            JMESPathCheck('httpsOnly', True),
+            JMESPathCheck('kind', 'app'),
+            JMESPathCheck('resourceGroup', resource_group)
+        ])
+
+        self.cmd('webapp config show', checks=[
+            JMESPathCheck('tags.cli', 'None'),
+            JMESPathCheck('windowsFxVersion', None)
+        ])
+
+        self.cmd('webapp config appsettings list', checks=[
+            JMESPathCheck('[0].name', 'SCM_DO_BUILD_DURING_DEPLOYMENT'),
+            JMESPathCheck('[0].value', 'True')
+        ])
+
+        # verify SKU and kind of ASP created
+        self.cmd('appservice plan show', checks=[
+            JMESPathCheck('properties.reserved', False),
+            JMESPathCheck('name', plan),
+            JMESPathCheck('sku.tier', 'Free'),
+            JMESPathCheck('sku.name', 'F1')
+        ])
+
+        # cleanup
+        # switch back the working dir
+        os.chdir(current_working_dir)
+        # delete temp_dir
+        import shutil
+        shutil.rmtree(temp_dir)
+
+    @live_only()
+    @ResourceGroupPreparer(random_name_length=24, name_prefix='clitest', location=WINDOWS_ASP_LOCATION_WEBAPP)
     def test_webapp_up_statichtml_e2e(self, resource_group):
         plan = self.create_random_name('up-statichtmlplan', 24)
         webapp_name = self.create_random_name('up-statichtmlapp', 24)
@@ -671,7 +745,7 @@ class WebAppUpE2ETests(ScenarioTest):
         self.assertTrue(result['name'].startswith(webapp_name))
         self.assertTrue(result['src_path'].replace(
             os.sep + os.sep, os.sep), up_working_dir)
-        self.assertEqual(result['runtime_version'].lower(), 'node|12-lts')
+        self.assertIn("node|", result['runtime_version'].lower())
         self.assertEqual(result['os'].lower(), 'linux')
 
         # test the full E2E operation works
@@ -798,17 +872,17 @@ class WebAppUpE2ETests(ScenarioTest):
 
         # test dryrun operation
         result = self.cmd(
-            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|12-lts" --sku "S1" --dryrun'.format(webapp_name, resource_group, plan)).get_output_in_json()
+            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|16-lts" --sku "S1" --dryrun'.format(webapp_name, resource_group, plan)).get_output_in_json()
         self.assertEqual(result['sku'].lower(), 'standard')
         self.assertTrue(result['name'].startswith(webapp_name))
         self.assertTrue(result['src_path'].replace(
             os.sep + os.sep, os.sep), up_working_dir)
-        self.assertEqual(result['runtime_version'].lower(), 'node|12-lts')
+        self.assertEqual(result['runtime_version'].lower(), 'node|16-lts')
         self.assertEqual(result['os'].lower(), 'linux')
 
         # test the full E2E operation works
         full_result = self.cmd(
-            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|12-lts" --sku "S1"'.format(webapp_name, resource_group, plan)).get_output_in_json()
+            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|16-lts" --sku "S1"'.format(webapp_name, resource_group, plan)).get_output_in_json()
         self.assertEqual(result['name'], full_result['name'])
 
         # Verify app is created
@@ -908,17 +982,17 @@ class WebAppUpE2ETests(ScenarioTest):
 
         # test dryrun operation
         result = self.cmd(
-            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|12-lts" --sku "S1" --dryrun'.format(webapp_name, resource_group, plan)).get_output_in_json()
+            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|16-lts" --sku "S1" --dryrun'.format(webapp_name, resource_group, plan)).get_output_in_json()
         self.assertEqual(result['sku'].lower(), 'standard')
         self.assertTrue(result['name'].startswith(webapp_name))
         self.assertTrue(result['src_path'].replace(
             os.sep + os.sep, os.sep), up_working_dir)
-        self.assertEqual(result['runtime_version'].lower(), 'node|12-lts')
+        self.assertEqual(result['runtime_version'].lower(), 'node|16-lts')
         self.assertEqual(result['os'].lower(), 'linux')
 
         # test the full E2E operation works
         full_result = self.cmd(
-            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|12-lts" --sku "S1"'.format(webapp_name, resource_group, plan)).get_output_in_json()
+            'webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|16-lts" --sku "S1"'.format(webapp_name, resource_group, plan)).get_output_in_json()
         self.assertEqual(result['name'], full_result['name'])
 
         # Verify app is created
@@ -933,7 +1007,7 @@ class WebAppUpE2ETests(ScenarioTest):
         from azure.cli.core.util import CLIError
         # changing existing linux app to windows should fail gracefully
         with self.assertRaises(CLIError):
-            self.cmd('webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|12LTS" --sku "S1"'.format(webapp_name, resource_group, plan))
+            self.cmd('webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|16LTS" --sku "S1"'.format(webapp_name, resource_group, plan))
 
         # cleanup
         # switch back the working dir
@@ -965,17 +1039,17 @@ class WebAppUpE2ETests(ScenarioTest):
 
         # test dryrun operation
         result = self.cmd(
-            'webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|12LTS" --sku "S1" --dryrun'.format(webapp_name, resource_group, plan)).get_output_in_json()
+            'webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|16LTS" --sku "S1" --dryrun'.format(webapp_name, resource_group, plan)).get_output_in_json()
         self.assertEqual(result['sku'].lower(), 'standard')
         self.assertTrue(result['name'].startswith(webapp_name))
         self.assertTrue(result['src_path'].replace(
             os.sep + os.sep, os.sep), up_working_dir)
-        self.assertEqual(result['runtime_version'].lower(), 'node|12lts')
+        self.assertEqual(result['runtime_version'].lower(), 'node|16lts')
         self.assertEqual(result['os'].lower(), 'windows')
 
         # test the full E2E operation works
         full_result = self.cmd(
-            'webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|12LTS" --sku "S1"'.format(webapp_name, resource_group, plan)).get_output_in_json()
+            'webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|16LTS" --sku "S1"'.format(webapp_name, resource_group, plan)).get_output_in_json()
         self.assertEqual(result['name'], full_result['name'])
 
         # Verify app is created
@@ -990,7 +1064,7 @@ class WebAppUpE2ETests(ScenarioTest):
         from azure.cli.core.util import CLIError
         # changing existing linux app to windows should fail gracefully
         with self.assertRaises(CLIError):
-            self.cmd('webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|12-LTS" --sku "S1"'.format(webapp_name, resource_group, plan))
+            self.cmd('webapp up -n {} -g {} --plan {} --os "linux" --runtime "node|16-LTS" --sku "S1"'.format(webapp_name, resource_group, plan))
 
         # cleanup
         # switch back the working dir
@@ -1019,7 +1093,7 @@ class WebAppUpE2ETests(ScenarioTest):
         os.chdir(temp_dir)
 
         # test the full E2E operation works
-        self.cmd('webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|12-LTS"'.format(webapp_name, resource_group, plan))
+        self.cmd('webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|14-LTS"'.format(webapp_name, resource_group, plan))
 
         # Verify app is created
         # since we set local context, -n and -g are no longer required
@@ -1033,7 +1107,7 @@ class WebAppUpE2ETests(ScenarioTest):
         app_settings = self.cmd('webapp config appsettings list').get_output_in_json()
         app_settings = {s["name"] : s["value"] for s in app_settings}
         self.assertIn("WEBSITE_NODE_DEFAULT_VERSION", app_settings)
-        self.assertIn("12", app_settings["WEBSITE_NODE_DEFAULT_VERSION"].lower())
+        self.assertIn("14", app_settings["WEBSITE_NODE_DEFAULT_VERSION"].lower())
 
         # test changing runtime to newer version
         self.cmd('webapp up -n {} -g {} --plan {} --os "windows" --runtime "node|16-lts"'.format(webapp_name, resource_group, plan))
@@ -1075,7 +1149,7 @@ class WebAppUpE2ETests(ScenarioTest):
         self.assertEqual(result['sku'].lower(), 'premiumv2')
         self.assertTrue(result['src_path'].replace(
             os.sep + os.sep, os.sep), up_working_dir)
-        self.assertEqual(result['runtime_version'].lower(), 'node|12-lts')
+        self.assertEqual(result['runtime_version'].lower(), 'node|14-lts')
         self.assertEqual(result['os'].lower(), 'linux')
 
         # test the full E2E operation works
@@ -1091,7 +1165,7 @@ class WebAppUpE2ETests(ScenarioTest):
         ])
 
         self.cmd('webapp config show', checks=[
-            JMESPathCheck('linuxFxVersion', 'NODE|12-lts'),
+            JMESPathCheck('linuxFxVersion', 'NODE|14-lts'),
             JMESPathCheck('tags.cli', 'None'),
         ])
 
@@ -1143,7 +1217,7 @@ class WebAppUpE2ETests(ScenarioTest):
         self.assertTrue(result['name'].startswith(linux_webapp_name))
         self.assertTrue(result['src_path'].replace(
             os.sep + os.sep, os.sep), up_working_dir)
-        self.assertEqual(result['runtime_version'].lower(), 'node|12-lts')
+        self.assertEqual(result['runtime_version'].lower(), 'node|14-lts')
         self.assertEqual(result['os'].lower(), 'linux')
 
         # test the full linux E2E operation works
@@ -1161,7 +1235,7 @@ class WebAppUpE2ETests(ScenarioTest):
         ])
 
         self.cmd('webapp config show', checks=[
-            JMESPathCheck('linuxFxVersion', 'NODE|12-lts'),
+            JMESPathCheck('linuxFxVersion', 'NODE|14-lts'),
             JMESPathCheck('tags.cli', 'None'),
         ])
 
@@ -1200,6 +1274,93 @@ class WebAppUpE2ETests(ScenarioTest):
             JMESPathCheck('sku.name', 'S1')
         ])
 
+
+        # cleanup
+        # switch back the working dir
+        os.chdir(current_working_dir)
+        # delete temp_dir
+        import shutil
+        shutil.rmtree(temp_dir)
+
+    @live_only()
+    @ResourceGroupPreparer(name_prefix='cli_test_webapp_up_runtimestatus', location='eastus')
+    def test_webapp_up_track_runtimestatus_runtimesuccessful(self, resource_group):
+        plan_name = self.create_random_name('plan-linux', 24)
+        webapp_name = self.create_random_name('app-linux', 24)
+        zip_file_name = os.path.join(TEST_DIR, 'node-Express-up.zip')
+
+        # create a temp directory and unzip the code to this folder
+        import zipfile
+        import tempfile
+        temp_dir = tempfile.mkdtemp()
+        zip_ref = zipfile.ZipFile(zip_file_name, 'r')
+        zip_ref.extractall(temp_dir)
+        current_working_dir = os.getcwd()
+
+        # change the working dir to the dir where the code has been extracted to
+        up_working_dir = os.path.join(temp_dir, 'myExpressApp')
+        os.chdir(up_working_dir)
+
+        self.cmd('webapp up -g {} -n {} --os-type linux'.format(resource_group, webapp_name)).assert_with_checks([
+            JMESPathCheck('resourcegroup', resource_group),
+            JMESPathCheck('name', webapp_name),
+        ])
+
+        # cleanup
+        # switch back the working dir
+        os.chdir(current_working_dir)
+        # delete temp_dir
+        import shutil
+        shutil.rmtree(temp_dir)
+
+    @live_only()
+    @ResourceGroupPreparer(name_prefix='cli_test_webapp_up_runtimestatus', location='eastus')
+    def test_webapp_up_track_runtimestatus_buildfailed(self, resource_group):
+        plan_name = self.create_random_name('plan-linux', 24)
+        webapp_name = self.create_random_name('app-linux', 24)
+        zip_file_name = os.path.join(TEST_DIR, 'data', 'nodebuildfailed.zip')
+
+        # create a temp directory and unzip the code to this folder
+        import zipfile
+        import tempfile
+        temp_dir = tempfile.mkdtemp()
+        zip_ref = zipfile.ZipFile(zip_file_name, 'r')
+        zip_ref.extractall(temp_dir)
+        current_working_dir = os.getcwd()
+
+        # change the working dir to the dir where the code has been extracted to
+        os.chdir(temp_dir)
+
+        with self.assertRaisesRegex(CLIError, "Deployment failed because the build process failed"):
+            self.cmd('webapp up -g {} -n {} --os-type linux -r "NODE|20-LTS"'.format(resource_group, webapp_name))
+
+        # cleanup
+        # switch back the working dir
+        os.chdir(current_working_dir)
+        # delete temp_dir
+        import shutil
+        shutil.rmtree(temp_dir)
+
+    @live_only()
+    @ResourceGroupPreparer(name_prefix='cli_test_webapp_up_runtimestatus', location='eastus')
+    def test_webapp_up_track_runtimestatus_runtimefailed(self, resource_group):
+        plan_name = self.create_random_name('plan-linux', 24)
+        webapp_name = self.create_random_name('app-linux', 24)
+        zip_file_name = os.path.join(TEST_DIR, 'data', 'noderuntimefailed.zip')
+
+        # create a temp directory and unzip the code to this folder
+        import zipfile
+        import tempfile
+        temp_dir = tempfile.mkdtemp()
+        zip_ref = zipfile.ZipFile(zip_file_name, 'r')
+        zip_ref.extractall(temp_dir)
+        current_working_dir = os.getcwd()
+
+        # change the working dir to the dir where the code has been extracted to
+        os.chdir(temp_dir)
+
+        with self.assertRaisesRegex(CLIError, "Deployment failed because the site failed to start within 10 mins."):
+            self.cmd('webapp up -g {} -n {} --os-type linux -r "NODE|20-LTS"'.format(resource_group, webapp_name))
 
         # cleanup
         # switch back the working dir

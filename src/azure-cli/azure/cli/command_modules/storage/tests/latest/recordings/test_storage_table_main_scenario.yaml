@@ -15,12 +15,12 @@ interactions:
       ParameterSetName:
       - -n -g --query -o
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-azure-mgmt-storage/20.0.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-core/1.31.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
     method: POST
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rg000001/providers/Microsoft.Storage/storageAccounts/clitest000002/listKeys?api-version=2021-09-01&$expand=kerb
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/clitest.rg000001/providers/Microsoft.Storage/storageAccounts/clitest000002/listKeys?api-version=2023-05-01&$expand=kerb
   response:
     body:
-      string: '{"keys":[{"creationTime":"2022-05-10T04:00:54.2754183Z","keyName":"key1","value":"veryFakedStorageAccountKey==","permissions":"FULL"},{"creationTime":"2022-05-10T04:00:54.2754183Z","keyName":"key2","value":"veryFakedStorageAccountKey==","permissions":"FULL"}]}'
+      string: '{"keys":[{"creationTime":"2024-12-17T07:40:33.1019364Z","keyName":"key1","value":"veryFakedStorageAccountKey==","permissions":"FULL"},{"creationTime":"2024-12-17T07:40:33.1019364Z","keyName":"key2","value":"veryFakedStorageAccountKey==","permissions":"FULL"}]}'
     headers:
       cache-control:
       - no-cache
@@ -29,7 +29,7 @@ interactions:
       content-type:
       - application/json
       date:
-      - Tue, 10 May 2022 04:01:15 GMT
+      - Tue, 17 Dec 2024 07:41:01 GMT
       expires:
       - '-1'
       pragma:
@@ -40,8 +40,10 @@ interactions:
       - max-age=31536000; includeSubDomains
       x-content-type-options:
       - nosniff
+      x-ms-operation-identifier:
+      - tenantId=54826b22-38d6-4fb2-bad9-b7b93a3e9c5a,objectId=a7250e3a-0e5e-48e2-9a34-45f1f5e1a91e/eastus2euap/04d5e70a-0214-4ca2-bd16-aac0144191f0
       x-ms-ratelimit-remaining-subscription-resource-requests:
-      - '11998'
+      - '11996'
     status:
       code: 200
       message: OK
@@ -63,13 +65,13 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:15 GMT
+      - Tue, 17 Dec 2024 07:41:03 GMT
       ParameterSetName:
       - -n --fail-on-exist --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:15 GMT
+      - Tue, 17 Dec 2024 07:41:03 GMT
       x-ms-version:
       - '2019-02-02'
     method: POST
@@ -83,7 +85,7 @@ interactions:
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:16 GMT
+      - Tue, 17 Dec 2024 07:41:04 GMT
       location:
       - https://clitest000002.table.core.windows.net/Tables('table000003')
       server:
@@ -111,13 +113,13 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:16 GMT
+      - Tue, 17 Dec 2024 07:41:04 GMT
       ParameterSetName:
       - -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:16 GMT
+      - Tue, 17 Dec 2024 07:41:04 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -131,7 +133,7 @@ interactions:
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:18 GMT
+      - Tue, 17 Dec 2024 07:41:05 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -157,13 +159,13 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:17 GMT
+      - Tue, 17 Dec 2024 07:41:06 GMT
       ParameterSetName:
       - --query --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:17 GMT
+      - Tue, 17 Dec 2024 07:41:06 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -177,7 +179,7 @@ interactions:
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:18 GMT
+      - Tue, 17 Dec 2024 07:41:06 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -190,60 +192,13 @@ interactions:
       code: 200
       message: OK
 - request:
-    body: null
-    headers:
-      Accept:
-      - application/json;odata=minimalmetadata
-      Accept-Encoding:
-      - gzip, deflate
-      CommandName:
-      - storage entity insert
-      Connection:
-      - keep-alive
-      DataServiceVersion:
-      - '3.0'
-      Date:
-      - Tue, 10 May 2022 04:01:19 GMT
-      ParameterSetName:
-      - -t -e --account-name --account-key
-      User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
-      x-ms-date:
-      - Tue, 10 May 2022 04:01:19 GMT
-      x-ms-version:
-      - '2019-02-02'
-    method: GET
-    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
-  response:
-    body:
-      string: '{"odata.error":{"code":"ResourceNotFound","message":{"lang":"en-US","value":"The
-        specified resource does not exist.\nRequestId:323cafd3-b002-0052-0f22-648020000000\nTime:2022-05-10T04:01:20.7227736Z"}}}'
-    headers:
-      cache-control:
-      - no-cache
-      content-type:
-      - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
-      date:
-      - Tue, 10 May 2022 04:01:20 GMT
-      server:
-      - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
-      transfer-encoding:
-      - chunked
-      x-content-type-options:
-      - nosniff
-      x-ms-version:
-      - '2019-02-02'
-    status:
-      code: 404
-      message: Not Found
-- request:
     body: '{"name": "test", "name@odata.type": "Edm.String", "value": "something",
       "value@odata.type": "Edm.String", "sizeInBytes": "86222504922", "sizeInBytes@odata.type":
       "Edm.Int64", "RowKey": "001", "RowKey@odata.type": "Edm.String", "PartitionKey":
       "001", "PartitionKey@odata.type": "Edm.String"}'
     headers:
       Accept:
-      - application/json
+      - application/json;odata=minimalmetadata
       Accept-Encoding:
       - gzip, deflate
       CommandName:
@@ -253,42 +208,46 @@ interactions:
       Content-Length:
       - '290'
       Content-Type:
-      - application/json
+      - application/json;odata=nometadata
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:20 GMT
+      - Tue, 17 Dec 2024 07:41:07 GMT
       ParameterSetName:
       - -t -e --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:20 GMT
+      - Tue, 17 Dec 2024 07:41:07 GMT
       x-ms-version:
       - '2019-02-02'
-    method: PATCH
-    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
+    method: POST
+    uri: https://clitest000002.table.core.windows.net/table000003
   response:
     body:
-      string: ''
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A08.3962272Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2024-12-17T07:41:08.3962272Z","name":"test","value":"something","sizeInBytes@odata.type":"Edm.Int64","sizeInBytes":"86222504922"}'
     headers:
       cache-control:
       - no-cache
-      content-length:
-      - '0'
+      content-type:
+      - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:20 GMT
+      - Tue, 17 Dec 2024 07:41:08 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A20.9947911Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A08.3962272Z'"
+      location:
+      - https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
+      transfer-encoding:
+      - chunked
       x-content-type-options:
       - nosniff
       x-ms-version:
       - '2019-02-02'
     status:
-      code: 204
-      message: No Content
+      code: 201
+      message: Created
 - request:
     body: null
     headers:
@@ -303,29 +262,29 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:20 GMT
+      - Tue, 17 Dec 2024 07:41:08 GMT
       ParameterSetName:
       - -t --row-key --partition-key --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:20 GMT
+      - Tue, 17 Dec 2024 07:41:08 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
   response:
     body:
-      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2022-05-10T04%3A01%3A20.9947911Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2022-05-10T04:01:20.9947911Z","name":"test","sizeInBytes@odata.type":"Edm.Int64","sizeInBytes":"86222504922","value":"something"}'
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A08.3962272Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2024-12-17T07:41:08.3962272Z","name":"test","value":"something","sizeInBytes@odata.type":"Edm.Int64","sizeInBytes":"86222504922"}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:21 GMT
+      - Tue, 17 Dec 2024 07:41:09 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A20.9947911Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A08.3962272Z'"
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -351,29 +310,29 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:21 GMT
+      - Tue, 17 Dec 2024 07:41:09 GMT
       ParameterSetName:
       - -t --row-key --partition-key --select --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:21 GMT
+      - Tue, 17 Dec 2024 07:41:09 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')?$select=name
   response:
     body:
-      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element&$select=name","odata.etag":"W/\"datetime''2022-05-10T04%3A01%3A20.9947911Z''\"","name":"test"}'
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element&$select=name","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A08.3962272Z''\"","name":"test"}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:22 GMT
+      - Tue, 17 Dec 2024 07:41:10 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A20.9947911Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A08.3962272Z'"
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -405,15 +364,15 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:23 GMT
+      - Tue, 17 Dec 2024 07:41:11 GMT
       If-Match:
       - '*'
       ParameterSetName:
       - -t -e --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:23 GMT
+      - Tue, 17 Dec 2024 07:41:11 GMT
       x-ms-version:
       - '2019-02-02'
     method: PATCH
@@ -427,9 +386,9 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:24 GMT
+      - Tue, 17 Dec 2024 07:41:11 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A24.692666Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A11.9040932Z'"
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-content-type-options:
@@ -453,29 +412,29 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:24 GMT
+      - Tue, 17 Dec 2024 07:41:12 GMT
       ParameterSetName:
       - -t --row-key --partition-key --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:24 GMT
+      - Tue, 17 Dec 2024 07:41:12 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
   response:
     body:
-      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2022-05-10T04%3A01%3A24.692666Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2022-05-10T04:01:24.692666Z","name":"test","sizeInBytes@odata.type":"Edm.Int64","sizeInBytes":"86222504922","value":"newval"}'
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A11.9040932Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2024-12-17T07:41:11.9040932Z","name":"test","sizeInBytes@odata.type":"Edm.Int64","sizeInBytes":"86222504922","value":"newval"}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:25 GMT
+      - Tue, 17 Dec 2024 07:41:12 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A24.692666Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A11.9040932Z'"
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -506,15 +465,15 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:25 GMT
+      - Tue, 17 Dec 2024 07:41:13 GMT
       If-Match:
       - '*'
       ParameterSetName:
       - -t -e --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:25 GMT
+      - Tue, 17 Dec 2024 07:41:13 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -528,9 +487,9 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:26 GMT
+      - Tue, 17 Dec 2024 07:41:14 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A27.1152741Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A14.214947Z'"
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-content-type-options:
@@ -554,29 +513,29 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:26 GMT
+      - Tue, 17 Dec 2024 07:41:14 GMT
       ParameterSetName:
       - -t --row-key --partition-key --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:26 GMT
+      - Tue, 17 Dec 2024 07:41:14 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
   response:
     body:
-      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2022-05-10T04%3A01%3A27.1152741Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2022-05-10T04:01:27.1152741Z","cat":"hat"}'
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A14.214947Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2024-12-17T07:41:14.214947Z","cat":"hat"}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:27 GMT
+      - Tue, 17 Dec 2024 07:41:14 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A27.1152741Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A14.214947Z'"
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -604,15 +563,15 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:28 GMT
+      - Tue, 17 Dec 2024 07:41:15 GMT
       If-Match:
       - '*'
       ParameterSetName:
       - -t --row-key --partition-key --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:28 GMT
+      - Tue, 17 Dec 2024 07:41:15 GMT
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -626,7 +585,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:29 GMT
+      - Tue, 17 Dec 2024 07:41:16 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-content-type-options:
@@ -650,13 +609,13 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:29 GMT
+      - Tue, 17 Dec 2024 07:41:16 GMT
       ParameterSetName:
       - -t --row-key --partition-key --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:29 GMT
+      - Tue, 17 Dec 2024 07:41:16 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -664,61 +623,14 @@ interactions:
   response:
     body:
       string: '{"odata.error":{"code":"ResourceNotFound","message":{"lang":"en-US","value":"The
-        specified resource does not exist.\nRequestId:9d1ee40b-d002-0026-4e22-64b4d0000000\nTime:2022-05-10T04:01:30.7200227Z"}}}'
+        specified resource does not exist.\nRequestId:a1579e72-e002-0049-1e57-50f5fa000000\nTime:2024-12-17T07:41:17.7379290Z"}}}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:30 GMT
-      server:
-      - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
-      transfer-encoding:
-      - chunked
-      x-content-type-options:
-      - nosniff
-      x-ms-version:
-      - '2019-02-02'
-    status:
-      code: 404
-      message: Not Found
-- request:
-    body: null
-    headers:
-      Accept:
-      - application/json;odata=minimalmetadata
-      Accept-Encoding:
-      - gzip, deflate
-      CommandName:
-      - storage entity insert
-      Connection:
-      - keep-alive
-      DataServiceVersion:
-      - '3.0'
-      Date:
-      - Tue, 10 May 2022 04:01:30 GMT
-      ParameterSetName:
-      - -t -e --account-name --account-key
-      User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
-      x-ms-date:
-      - Tue, 10 May 2022 04:01:30 GMT
-      x-ms-version:
-      - '2019-02-02'
-    method: GET
-    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
-  response:
-    body:
-      string: '{"odata.error":{"code":"ResourceNotFound","message":{"lang":"en-US","value":"The
-        specified resource does not exist.\nRequestId:d7ec36f2-2002-001d-0522-64f174000000\nTime:2022-05-10T04:01:31.9060970Z"}}}'
-    headers:
-      cache-control:
-      - no-cache
-      content-type:
-      - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
-      date:
-      - Tue, 10 May 2022 04:01:30 GMT
+      - Tue, 17 Dec 2024 07:41:17 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -736,7 +648,7 @@ interactions:
       "PartitionKey": "001", "PartitionKey@odata.type": "Edm.String"}'
     headers:
       Accept:
-      - application/json
+      - application/json;odata=minimalmetadata
       Accept-Encoding:
       - gzip, deflate
       CommandName:
@@ -746,78 +658,35 @@ interactions:
       Content-Length:
       - '221'
       Content-Type:
-      - application/json
+      - application/json;odata=nometadata
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:31 GMT
+      - Tue, 17 Dec 2024 07:41:18 GMT
       ParameterSetName:
       - -t -e --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:31 GMT
+      - Tue, 17 Dec 2024 07:41:18 GMT
       x-ms-version:
       - '2019-02-02'
-    method: PATCH
-    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
+    method: POST
+    uri: https://clitest000002.table.core.windows.net/table000003
   response:
     body:
-      string: ''
-    headers:
-      cache-control:
-      - no-cache
-      content-length:
-      - '0'
-      date:
-      - Tue, 10 May 2022 04:01:31 GMT
-      etag:
-      - W/"datetime'2022-05-10T04%3A01%3A32.1733683Z'"
-      server:
-      - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
-      x-content-type-options:
-      - nosniff
-      x-ms-version:
-      - '2019-02-02'
-    status:
-      code: 204
-      message: No Content
-- request:
-    body: null
-    headers:
-      Accept:
-      - application/json;odata=minimalmetadata
-      Accept-Encoding:
-      - gzip, deflate
-      CommandName:
-      - storage entity insert
-      Connection:
-      - keep-alive
-      DataServiceVersion:
-      - '3.0'
-      Date:
-      - Tue, 10 May 2022 04:01:31 GMT
-      ParameterSetName:
-      - -t -e --account-name --account-key
-      User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
-      x-ms-date:
-      - Tue, 10 May 2022 04:01:31 GMT
-      x-ms-version:
-      - '2019-02-02'
-    method: GET
-    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='002',RowKey='002')
-  response:
-    body:
-      string: '{"odata.error":{"code":"ResourceNotFound","message":{"lang":"en-US","value":"The
-        specified resource does not exist.\nRequestId:c7ab368b-1002-0080-6c22-6403ce000000\nTime:2022-05-10T04:01:33.4045820Z"}}}'
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A18.9054068Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2024-12-17T07:41:18.9054068Z","name":"test","value":"something"}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:32 GMT
+      - Tue, 17 Dec 2024 07:41:18 GMT
+      etag:
+      - W/"datetime'2024-12-17T07%3A41%3A18.9054068Z'"
+      location:
+      - https://clitest000002.table.core.windows.net/table000003(PartitionKey='001',RowKey='001')
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -827,15 +696,15 @@ interactions:
       x-ms-version:
       - '2019-02-02'
     status:
-      code: 404
-      message: Not Found
+      code: 201
+      message: Created
 - request:
     body: '{"name": "test2", "name@odata.type": "Edm.String", "value": "something2",
       "value@odata.type": "Edm.String", "RowKey": "002", "RowKey@odata.type": "Edm.String",
       "PartitionKey": "002", "PartitionKey@odata.type": "Edm.String"}'
     headers:
       Accept:
-      - application/json
+      - application/json;odata=minimalmetadata
       Accept-Encoding:
       - gzip, deflate
       CommandName:
@@ -845,42 +714,46 @@ interactions:
       Content-Length:
       - '223'
       Content-Type:
-      - application/json
+      - application/json;odata=nometadata
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:33 GMT
+      - Tue, 17 Dec 2024 07:41:19 GMT
       ParameterSetName:
       - -t -e --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:33 GMT
+      - Tue, 17 Dec 2024 07:41:19 GMT
       x-ms-version:
       - '2019-02-02'
-    method: PATCH
-    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='002',RowKey='002')
+    method: POST
+    uri: https://clitest000002.table.core.windows.net/table000003
   response:
     body:
-      string: ''
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A20.064727Z''\"","PartitionKey":"002","RowKey":"002","Timestamp":"2024-12-17T07:41:20.064727Z","name":"test2","value":"something2"}'
     headers:
       cache-control:
       - no-cache
-      content-length:
-      - '0'
+      content-type:
+      - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:32 GMT
+      - Tue, 17 Dec 2024 07:41:19 GMT
       etag:
-      - W/"datetime'2022-05-10T04%3A01%3A33.6505183Z'"
+      - W/"datetime'2024-12-17T07%3A41%3A20.064727Z'"
+      location:
+      - https://clitest000002.table.core.windows.net/table000003(PartitionKey='002',RowKey='002')
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
+      transfer-encoding:
+      - chunked
       x-content-type-options:
       - nosniff
       x-ms-version:
       - '2019-02-02'
     status:
-      code: 204
-      message: No Content
+      code: 201
+      message: Created
 - request:
     body: null
     headers:
@@ -895,27 +768,27 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:33 GMT
+      - Tue, 17 Dec 2024 07:41:20 GMT
       ParameterSetName:
       - -t --num-results --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:33 GMT
+      - Tue, 17 Dec 2024 07:41:20 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003()?$top=1
   response:
     body:
-      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003","value":[{"odata.etag":"W/\"datetime''2022-05-10T04%3A01%3A32.1733683Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2022-05-10T04:01:32.1733683Z","name":"test","value":"something"}]}'
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003","value":[{"odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A18.9054068Z''\"","PartitionKey":"001","RowKey":"001","Timestamp":"2024-12-17T07:41:18.9054068Z","name":"test","value":"something"}]}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:34 GMT
+      - Tue, 17 Dec 2024 07:41:20 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -945,27 +818,229 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:34 GMT
+      - Tue, 17 Dec 2024 07:41:21 GMT
       ParameterSetName:
       - -t --marker --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:34 GMT
+      - Tue, 17 Dec 2024 07:41:21 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003()?NextPartitionKey=1%214%21MDAy&NextRowKey=1%214%21MDAy
   response:
     body:
-      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003","value":[{"odata.etag":"W/\"datetime''2022-05-10T04%3A01%3A33.6505183Z''\"","PartitionKey":"002","RowKey":"002","Timestamp":"2022-05-10T04:01:33.6505183Z","name":"test2","value":"something2"}]}'
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003","value":[{"odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A20.064727Z''\"","PartitionKey":"002","RowKey":"002","Timestamp":"2024-12-17T07:41:20.064727Z","name":"test2","value":"something2"}]}'
     headers:
       cache-control:
       - no-cache
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:35 GMT
+      - Tue, 17 Dec 2024 07:41:22 GMT
+      server:
+      - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
+      transfer-encoding:
+      - chunked
+      x-content-type-options:
+      - nosniff
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"value": 152, "RowKey": "003", "RowKey@odata.type": "Edm.String", "PartitionKey":
+      "003", "PartitionKey@odata.type": "Edm.String"}'
+    headers:
+      Accept:
+      - application/json;odata=minimalmetadata
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - storage entity insert
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '130'
+      Content-Type:
+      - application/json;odata=nometadata
+      DataServiceVersion:
+      - '3.0'
+      Date:
+      - Tue, 17 Dec 2024 07:41:22 GMT
+      ParameterSetName:
+      - -t -e --account-name --account-key
+      User-Agent:
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
+      x-ms-date:
+      - Tue, 17 Dec 2024 07:41:22 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: POST
+    uri: https://clitest000002.table.core.windows.net/table000003
+  response:
+    body:
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A23.6670918Z''\"","PartitionKey":"003","RowKey":"003","Timestamp":"2024-12-17T07:41:23.6670918Z","value":152}'
+    headers:
+      cache-control:
+      - no-cache
+      content-type:
+      - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
+      date:
+      - Tue, 17 Dec 2024 07:41:23 GMT
+      etag:
+      - W/"datetime'2024-12-17T07%3A41%3A23.6670918Z'"
+      location:
+      - https://clitest000002.table.core.windows.net/table000003(PartitionKey='003',RowKey='003')
+      server:
+      - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
+      transfer-encoding:
+      - chunked
+      x-content-type-options:
+      - nosniff
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json;odata=minimalmetadata
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - storage entity show
+      Connection:
+      - keep-alive
+      DataServiceVersion:
+      - '3.0'
+      Date:
+      - Tue, 17 Dec 2024 07:41:23 GMT
+      ParameterSetName:
+      - -t --row-key --partition-key --account-name --account-key
+      User-Agent:
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
+      x-ms-date:
+      - Tue, 17 Dec 2024 07:41:23 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: GET
+    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='003',RowKey='003')
+  response:
+    body:
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A23.6670918Z''\"","PartitionKey":"003","RowKey":"003","Timestamp":"2024-12-17T07:41:23.6670918Z","value":152}'
+    headers:
+      cache-control:
+      - no-cache
+      content-type:
+      - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
+      date:
+      - Tue, 17 Dec 2024 07:41:23 GMT
+      etag:
+      - W/"datetime'2024-12-17T07%3A41%3A23.6670918Z'"
+      server:
+      - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
+      transfer-encoding:
+      - chunked
+      x-content-type-options:
+      - nosniff
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"value": "0152", "value@odata.type": "Edm.String", "RowKey": "003", "RowKey@odata.type":
+      "Edm.String", "PartitionKey": "003", "PartitionKey@odata.type": "Edm.String"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - storage entity insert
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '167'
+      Content-Type:
+      - application/json
+      DataServiceVersion:
+      - '3.0'
+      Date:
+      - Tue, 17 Dec 2024 07:41:25 GMT
+      ParameterSetName:
+      - -t -e --if-exists --account-name --account-key
+      User-Agent:
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
+      x-ms-date:
+      - Tue, 17 Dec 2024 07:41:25 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: PUT
+    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='003',RowKey='003')
+  response:
+    body:
+      string: ''
+    headers:
+      cache-control:
+      - no-cache
+      content-length:
+      - '0'
+      date:
+      - Tue, 17 Dec 2024 07:41:25 GMT
+      etag:
+      - W/"datetime'2024-12-17T07%3A41%3A25.9892526Z'"
+      server:
+      - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
+      x-content-type-options:
+      - nosniff
+      x-ms-version:
+      - '2019-02-02'
+    status:
+      code: 204
+      message: No Content
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json;odata=minimalmetadata
+      Accept-Encoding:
+      - gzip, deflate
+      CommandName:
+      - storage entity show
+      Connection:
+      - keep-alive
+      DataServiceVersion:
+      - '3.0'
+      Date:
+      - Tue, 17 Dec 2024 07:41:26 GMT
+      ParameterSetName:
+      - -t --row-key --partition-key --account-name --account-key
+      User-Agent:
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
+      x-ms-date:
+      - Tue, 17 Dec 2024 07:41:26 GMT
+      x-ms-version:
+      - '2019-02-02'
+    method: GET
+    uri: https://clitest000002.table.core.windows.net/table000003(PartitionKey='003',RowKey='003')
+  response:
+    body:
+      string: '{"odata.metadata":"https://clitest000002.table.core.windows.net/$metadata#table000003/@Element","odata.etag":"W/\"datetime''2024-12-17T07%3A41%3A25.9892526Z''\"","PartitionKey":"003","RowKey":"003","Timestamp":"2024-12-17T07:41:25.9892526Z","value":"0152"}'
+    headers:
+      cache-control:
+      - no-cache
+      content-type:
+      - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
+      date:
+      - Tue, 17 Dec 2024 07:41:26 GMT
+      etag:
+      - W/"datetime'2024-12-17T07%3A41%3A25.9892526Z'"
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -989,13 +1064,13 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:35 GMT
+      - Tue, 17 Dec 2024 07:41:27 GMT
       ParameterSetName:
       - -t --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:35 GMT
+      - Tue, 17 Dec 2024 07:41:27 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -1008,7 +1083,7 @@ interactions:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:36 GMT
+      - Tue, 17 Dec 2024 07:41:27 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1030,13 +1105,13 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:37 GMT
+      - Tue, 17 Dec 2024 07:41:28 GMT
       ParameterSetName:
       - -t -n --permission --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:37 GMT
+      - Tue, 17 Dec 2024 07:41:28 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -1049,7 +1124,7 @@ interactions:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:37 GMT
+      - Tue, 17 Dec 2024 07:41:29 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1062,7 +1137,7 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
+      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Accept:
       - application/xml
@@ -1073,17 +1148,17 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '256'
+      - '184'
       Content-Type:
       - application/xml
       Date:
-      - Tue, 10 May 2022 04:01:38 GMT
+      - Tue, 17 Dec 2024 07:41:29 GMT
       ParameterSetName:
       - -t -n --permission --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:38 GMT
+      - Tue, 17 Dec 2024 07:41:29 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -1095,7 +1170,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:37 GMT
+      - Tue, 17 Dec 2024 07:41:29 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -1115,25 +1190,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:38 GMT
+      - Tue, 17 Dec 2024 07:41:30 GMT
       ParameterSetName:
       - -t -n --start --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:38 GMT
+      - Tue, 17 Dec 2024 07:41:30 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:39 GMT
+      - Tue, 17 Dec 2024 07:41:30 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1146,8 +1221,7 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission
-      /></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
+      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00Z</Start></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Accept:
       - application/xml
@@ -1158,17 +1232,17 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '419'
+      - '296'
       Content-Type:
       - application/xml
       Date:
-      - Tue, 10 May 2022 04:01:39 GMT
+      - Tue, 17 Dec 2024 07:41:31 GMT
       ParameterSetName:
       - -t -n --start --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:39 GMT
+      - Tue, 17 Dec 2024 07:41:31 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -1180,7 +1254,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:39 GMT
+      - Tue, 17 Dec 2024 07:41:30 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -1200,25 +1274,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:40 GMT
+      - Tue, 17 Dec 2024 07:41:31 GMT
       ParameterSetName:
       - -t -n --expiry --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:40 GMT
+      - Tue, 17 Dec 2024 07:41:31 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:41 GMT
+      - Tue, 17 Dec 2024 07:41:31 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1231,9 +1305,8 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission
-      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41Z</Start><Expiry>2018-01-01T00:00Z</Expiry><Permission
-      /></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
+      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Permission
+      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00Z</Expiry></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Accept:
       - application/xml
@@ -1244,17 +1317,17 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '585'
+      - '427'
       Content-Type:
       - application/xml
       Date:
-      - Tue, 10 May 2022 04:01:41 GMT
+      - Tue, 17 Dec 2024 07:41:32 GMT
       ParameterSetName:
       - -t -n --expiry --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:41 GMT
+      - Tue, 17 Dec 2024 07:41:32 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -1266,7 +1339,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:41 GMT
+      - Tue, 17 Dec 2024 07:41:32 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -1286,25 +1359,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:41 GMT
+      - Tue, 17 Dec 2024 07:41:33 GMT
       ParameterSetName:
       - -t -n --permission --start --expiry --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:41 GMT
+      - Tue, 17 Dec 2024 07:41:33 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:42 GMT
+      - Tue, 17 Dec 2024 07:41:33 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1317,8 +1390,8 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission
-      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41Z</Start><Expiry>2018-01-01T00:00:00Z</Expiry><Permission
+      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Permission
+      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00Z</Expiry><Permission
       /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00Z</Start><Expiry>2016-05-01T00:00Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Accept:
@@ -1330,17 +1403,17 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '763'
+      - '619'
       Content-Type:
       - application/xml
       Date:
-      - Tue, 10 May 2022 04:01:42 GMT
+      - Tue, 17 Dec 2024 07:41:34 GMT
       ParameterSetName:
       - -t -n --permission --start --expiry --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:42 GMT
+      - Tue, 17 Dec 2024 07:41:34 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -1352,7 +1425,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:43 GMT
+      - Tue, 17 Dec 2024 07:41:34 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -1372,25 +1445,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:43 GMT
+      - Tue, 17 Dec 2024 07:41:34 GMT
       ParameterSetName:
       - -t --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:43 GMT
+      - Tue, 17 Dec 2024 07:41:34 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:43 GMT
+      - Tue, 17 Dec 2024 07:41:35 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1412,25 +1485,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:44 GMT
+      - Tue, 17 Dec 2024 07:41:36 GMT
       ParameterSetName:
       - -t -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:44 GMT
+      - Tue, 17 Dec 2024 07:41:36 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:45 GMT
+      - Tue, 17 Dec 2024 07:41:36 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1452,25 +1525,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:45 GMT
+      - Tue, 17 Dec 2024 07:41:37 GMT
       ParameterSetName:
       - -t -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:45 GMT
+      - Tue, 17 Dec 2024 07:41:37 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:47 GMT
+      - Tue, 17 Dec 2024 07:41:37 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1492,25 +1565,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:46 GMT
+      - Tue, 17 Dec 2024 07:41:38 GMT
       ParameterSetName:
       - -t -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:46 GMT
+      - Tue, 17 Dec 2024 07:41:38 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:48 GMT
+      - Tue, 17 Dec 2024 07:41:38 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1532,25 +1605,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:48 GMT
+      - Tue, 17 Dec 2024 07:41:39 GMT
       ParameterSetName:
       - -t -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:48 GMT
+      - Tue, 17 Dec 2024 07:41:39 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:48 GMT
+      - Tue, 17 Dec 2024 07:41:39 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1572,25 +1645,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:49 GMT
+      - Tue, 17 Dec 2024 07:41:40 GMT
       ParameterSetName:
       - -t -n --permission --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:49 GMT
+      - Tue, 17 Dec 2024 07:41:40 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>a</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:50 GMT
+      - Tue, 17 Dec 2024 07:41:41 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1603,8 +1676,8 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission>au</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission
-      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41Z</Start><Expiry>2018-01-01T00:00:00Z</Expiry><Permission
+      <SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>au</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Permission
+      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00Z</Expiry><Permission
       /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Expiry>2016-05-01T00:00:00Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Accept:
@@ -1616,17 +1689,17 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '770'
+      - '626'
       Content-Type:
       - application/xml
       Date:
-      - Tue, 10 May 2022 04:01:50 GMT
+      - Tue, 17 Dec 2024 07:41:41 GMT
       ParameterSetName:
       - -t -n --permission --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:50 GMT
+      - Tue, 17 Dec 2024 07:41:41 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -1638,7 +1711,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:50 GMT
+      - Tue, 17 Dec 2024 07:41:41 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -1658,25 +1731,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:50 GMT
+      - Tue, 17 Dec 2024 07:41:42 GMT
       ParameterSetName:
       - -t -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:50 GMT
+      - Tue, 17 Dec 2024 07:41:42 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>au</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>au</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:52 GMT
+      - Tue, 17 Dec 2024 07:41:42 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1698,25 +1771,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:52 GMT
+      - Tue, 17 Dec 2024 07:41:43 GMT
       ParameterSetName:
       - -t -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:52 GMT
+      - Tue, 17 Dec 2024 07:41:43 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Start>2022-05-10T04:01:38.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry><Permission>au</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test1</Id><AccessPolicy><Permission>au</Permission></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:52 GMT
+      - Tue, 17 Dec 2024 07:41:43 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1729,8 +1802,8 @@ interactions:
 - request:
     body: '<?xml version=''1.0'' encoding=''utf-8''?>
 
-      <SignedIdentifiers><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Expiry>9999-12-31T23:59:59Z</Expiry><Permission
-      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41Z</Start><Expiry>2018-01-01T00:00:00Z</Expiry><Permission
+      <SignedIdentifiers><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Permission
+      /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00Z</Expiry><Permission
       /></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00Z</Start><Expiry>2016-05-01T00:00:00Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>'
     headers:
       Accept:
@@ -1742,17 +1815,17 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '591'
+      - '519'
       Content-Type:
       - application/xml
       Date:
-      - Tue, 10 May 2022 04:01:53 GMT
+      - Tue, 17 Dec 2024 07:41:44 GMT
       ParameterSetName:
       - -t -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:53 GMT
+      - Tue, 17 Dec 2024 07:41:44 GMT
       x-ms-version:
       - '2019-02-02'
     method: PUT
@@ -1764,7 +1837,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:53 GMT
+      - Tue, 17 Dec 2024 07:41:43 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-ms-version:
@@ -1784,25 +1857,25 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:01:53 GMT
+      - Tue, 17 Dec 2024 07:41:45 GMT
       ParameterSetName:
       - -t --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:53 GMT
+      - Tue, 17 Dec 2024 07:41:45 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
     uri: https://clitest000002.table.core.windows.net/table000003?comp=acl
   response:
     body:
-      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>9999-12-31T23:59:59.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Start>2022-05-10T04:01:41.0000000Z</Start><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
+      string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><SignedIdentifiers><SignedIdentifier><Id>test2</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test3</Id><AccessPolicy><Expiry>2018-01-01T00:00:00.0000000Z</Expiry></AccessPolicy></SignedIdentifier><SignedIdentifier><Id>test4</Id><AccessPolicy><Start>2016-01-01T00:00:00.0000000Z</Start><Expiry>2016-05-01T00:00:00.0000000Z</Expiry><Permission>raud</Permission></AccessPolicy></SignedIdentifier></SignedIdentifiers>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:01:54 GMT
+      - Tue, 17 Dec 2024 07:41:45 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1826,13 +1899,13 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:54 GMT
+      - Tue, 17 Dec 2024 07:41:46 GMT
       ParameterSetName:
       - --name --fail-not-exist --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:54 GMT
+      - Tue, 17 Dec 2024 07:41:46 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -1846,7 +1919,7 @@ interactions:
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:56 GMT
+      - Tue, 17 Dec 2024 07:41:46 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1872,13 +1945,13 @@ interactions:
       Content-Length:
       - '0'
       Date:
-      - Tue, 10 May 2022 04:01:56 GMT
+      - Tue, 17 Dec 2024 07:41:47 GMT
       ParameterSetName:
       - --name --fail-not-exist --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:56 GMT
+      - Tue, 17 Dec 2024 07:41:47 GMT
       x-ms-version:
       - '2019-02-02'
     method: DELETE
@@ -1892,7 +1965,7 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 10 May 2022 04:01:56 GMT
+      - Tue, 17 Dec 2024 07:41:46 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       x-content-type-options:
@@ -1916,13 +1989,13 @@ interactions:
       DataServiceVersion:
       - '3.0'
       Date:
-      - Tue, 10 May 2022 04:01:56 GMT
+      - Tue, 17 Dec 2024 07:41:47 GMT
       ParameterSetName:
       - -n --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:01:56 GMT
+      - Tue, 17 Dec 2024 07:41:47 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -1936,7 +2009,7 @@ interactions:
       content-type:
       - application/json;odata=minimalmetadata;streaming=true;charset=utf-8
       date:
-      - Tue, 10 May 2022 04:01:57 GMT
+      - Tue, 17 Dec 2024 07:41:48 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:
@@ -1960,13 +2033,13 @@ interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 10 May 2022 04:06:57 GMT
+      - Tue, 17 Dec 2024 07:46:49 GMT
       ParameterSetName:
       - --account-name --account-key
       User-Agent:
-      - AZURECLI/2.36.0 azsdk-python-data-tables/12.2.0 Python/3.7.9 (Windows-10-10.0.22000-SP0)
+      - AZURECLI/2.67.0 (PIP) azsdk-python-data-tables/12.4.0 Python/3.9.13 (Windows-10-10.0.19045-SP0)
       x-ms-date:
-      - Tue, 10 May 2022 04:06:57 GMT
+      - Tue, 17 Dec 2024 07:46:49 GMT
       x-ms-version:
       - '2019-02-02'
     method: GET
@@ -1974,12 +2047,12 @@ interactions:
   response:
     body:
       string: "\uFEFF<?xml version=\"1.0\" encoding=\"utf-8\"?><StorageServiceStats><GeoReplication><Status>live</Status><LastSyncTime>Tue,
-        10 May 2022 04:04:18 GMT</LastSyncTime></GeoReplication></StorageServiceStats>"
+        17 Dec 2024 07:43:56 GMT</LastSyncTime></GeoReplication></StorageServiceStats>"
     headers:
       content-type:
       - application/xml
       date:
-      - Tue, 10 May 2022 04:06:58 GMT
+      - Tue, 17 Dec 2024 07:46:50 GMT
       server:
       - Windows-Azure-Table/1.0 Microsoft-HTTPAPI/2.0
       transfer-encoding:

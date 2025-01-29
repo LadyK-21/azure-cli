@@ -68,8 +68,7 @@ class BaseCommandOperation:
     def load_getter_op_arguments(self, getter_op_path, cmd_args=None):
         """ Load arguments from function signature of getter command op """
         op = self.get_op_handler(getter_op_path)
-        getter_args = dict(
-            extract_args_from_signature(op, excluded_params=EXCLUDED_PARAMS))
+        getter_args = dict(extract_args_from_signature(op, excluded_params=EXCLUDED_PARAMS))
         cmd_args = cmd_args or {}
         cmd_args.update(getter_args)
         # The cmd argument is required when calling self.handler function.
@@ -98,7 +97,7 @@ class CommandOperation(BaseCommandOperation):
     def __init__(self, command_loader, op_path, **merged_kwargs):
         if not isinstance(op_path, str):
             raise TypeError("Operation must be a string. Got '{}'".format(op_path))
-        super(CommandOperation, self).__init__(command_loader, **merged_kwargs)
+        super().__init__(command_loader, **merged_kwargs)
         self.op_path = op_path
 
     def handler(self, command_args):
@@ -151,7 +150,7 @@ class GenericUpdateCommandOperation(BaseCommandOperation):     # pylint: disable
             raise TypeError("Setter operation must be a string. Got '{}'".format(setter_op_path))
         if custom_function_op_path and not isinstance(custom_function_op_path, str):
             raise TypeError("Custom function operation must be a string. Got '{}'".format(custom_function_op_path))
-        super(GenericUpdateCommandOperation, self).__init__(command_loader, **merged_kwargs)
+        super().__init__(command_loader, **merged_kwargs)
 
         self.getter_op_path = getter_op_path
         self.setter_op_path = setter_op_path
@@ -166,7 +165,7 @@ class GenericUpdateCommandOperation(BaseCommandOperation):     # pylint: disable
         from knack.util import CLIError
         from azure.cli.core.commands import cached_get, cached_put, _is_poller
         from azure.cli.core.util import find_child_item, augment_no_wait_handler_args
-        from azure.cli.core.commands.arm import add_usage, remove_usage, set_usage,\
+        from azure.cli.core.commands.arm import add_usage, remove_usage, set_usage, \
             add_properties, remove_properties, set_properties
 
         self.cmd = command_args.get('cmd')
@@ -335,7 +334,7 @@ class ShowCommandOperation(BaseCommandOperation):
     def __init__(self, command_loader, op_path, **merged_kwargs):
         if not isinstance(op_path, str):
             raise TypeError("operation must be a string. Got '{}'".format(op_path))
-        super(ShowCommandOperation, self).__init__(command_loader, **merged_kwargs)
+        super().__init__(command_loader, **merged_kwargs)
         self.op_path = op_path
 
     def handler(self, command_args):
@@ -378,18 +377,12 @@ class WaitCommandOperation(BaseCommandOperation):
     def __init__(self, command_loader, op_path, **merged_kwargs):
         if not isinstance(op_path, str):
             raise TypeError("operation must be a string. Got '{}'".format(op_path))
-        super(WaitCommandOperation, self).__init__(command_loader, **merged_kwargs)
+        super().__init__(command_loader, **merged_kwargs)
         self.op_path = op_path
 
     def handler(self, command_args):    # pylint: disable=too-many-statements, too-many-locals
         """ Callback function of CLICommand handler """
-        from msrest.exceptions import ClientException
-        from azure.core.exceptions import HttpResponseError
-        from knack.util import CLIError
-        from azure.cli.core.commands.arm import EXCLUDED_NON_CLIENT_PARAMS, verify_property
-        from azure.cli.core.commands.progress import IndeterminateProgressBar
-
-        import time
+        from azure.cli.core.commands.arm import EXCLUDED_NON_CLIENT_PARAMS
 
         op = self.get_op_handler(self.op_path)
         getter_args = dict(extract_args_from_signature(op, excluded_params=EXCLUDED_NON_CLIENT_PARAMS))
@@ -405,6 +398,18 @@ class WaitCommandOperation(BaseCommandOperation):
 
         getter = self.get_op_handler(self.op_path)      # Fetch op handler again after cmd property is set
 
+        return self.wait(command_args, cli_ctx=self.cli_ctx, getter=getter)
+
+    @classmethod
+    def wait(cls, command_args, cli_ctx, getter):
+        from msrest.exceptions import ClientException
+        from azure.core.exceptions import HttpResponseError
+        from knack.util import CLIError
+        from azure.cli.core.azclierror import InvalidArgumentValueError, AzureResponseError
+        from azure.cli.core.commands.arm import verify_property
+        from azure.cli.core.commands.progress import IndeterminateProgressBar
+        import time
+
         timeout = command_args.pop('timeout')
         interval = command_args.pop('interval')
         wait_for_created = command_args.pop('created')
@@ -414,10 +419,10 @@ class WaitCommandOperation(BaseCommandOperation):
         custom_condition = command_args.pop('custom')
         if not any([wait_for_created, wait_for_updated, wait_for_deleted,
                     wait_for_exists, custom_condition]):
-            raise CLIError(
+            raise InvalidArgumentValueError(
                 "incorrect usage: --created | --updated | --deleted | --exists | --custom JMESPATH")
 
-        progress_indicator = IndeterminateProgressBar(self.cli_ctx, message='Waiting')
+        progress_indicator = IndeterminateProgressBar(cli_ctx, message='Waiting')
         progress_indicator.begin()
         for _ in range(0, timeout, interval):
             try:
@@ -426,13 +431,13 @@ class WaitCommandOperation(BaseCommandOperation):
                 if wait_for_exists:
                     progress_indicator.end()
                     return None
-                provisioning_state = self._get_provisioning_state(instance)
+                provisioning_state = cls._get_provisioning_state(instance)
                 # until we have any needs to wait for 'Failed', let us bail out on this
                 if provisioning_state:
                     provisioning_state = provisioning_state.lower()
                 if provisioning_state == 'failed':
                     progress_indicator.stop()
-                    raise CLIError('The operation failed')
+                    raise AzureResponseError('The operation failed')
                 if ((wait_for_created or wait_for_updated) and provisioning_state == 'succeeded') or \
                         custom_condition and bool(verify_property(instance, custom_condition)):
                     progress_indicator.end()
@@ -457,26 +462,32 @@ class WaitCommandOperation(BaseCommandOperation):
 
     @staticmethod
     def _get_provisioning_state(instance):
-        provisioning_state = getattr(instance, 'provisioning_state', None)
+        from knack.util import todict
+        result = todict(instance)
+        provisioning_state = result.get('provisioning_state', result.get('provisioningState', None))
         if not provisioning_state:
             # some SDK, like resource-group, has 'provisioning_state' under 'properties'
-            properties = getattr(instance, 'properties', None)
+            properties = result.get('properties', None)
             if properties:
-                provisioning_state = getattr(properties, 'provisioning_state', None)
+                provisioning_state = properties.get('provisioning_state', properties.get('provisioningState', None))
                 # some SDK, like keyvault, has 'provisioningState' under 'properties.additional_properties'
                 if not provisioning_state:
-                    additional_properties = getattr(properties, 'additional_properties', {})
-                    provisioning_state = additional_properties.get('provisioningState')
-
-                # some SDK, like resource, has 'provisioningState' under 'properties' dict
-                if not provisioning_state:
-                    provisioning_state = properties.get('provisioningState')
+                    additional_properties = properties.get('additional_properties',
+                                                           properties.get('additionalProperties', {}))
+                    provisioning_state = additional_properties.get('provisioning_state',
+                                                                   additional_properties.get('provisioningState', None))
         return provisioning_state
 
     def arguments_loader(self):
         """ Callback function of CLICommand arguments_loader """
         cmd_args = self.load_getter_op_arguments(self.op_path)
 
+        cmd_args.update(self.wait_args())
+        return list(cmd_args.items())
+
+    @staticmethod
+    def wait_args():
+        cmd_args = {}
         group_name = 'Wait Condition'
         cmd_args['timeout'] = CLICommandArgument(
             'timeout', options_list=['--timeout'], default=3600, arg_group=group_name, type=int,
@@ -508,7 +519,7 @@ class WaitCommandOperation(BaseCommandOperation):
                  "provisioningState!='InProgress', "
                  "instanceView.statuses[?code=='PowerState/running']"
         )
-        return list(cmd_args.items())
+        return cmd_args
 
     def description_loader(self):
         """ Callback function of CLICommand description_loader """
