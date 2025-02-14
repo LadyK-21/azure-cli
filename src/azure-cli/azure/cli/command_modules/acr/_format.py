@@ -4,8 +4,11 @@
 # --------------------------------------------------------------------------------------------
 
 from collections import OrderedDict
+from datetime import datetime
 from knack.log import get_logger
-
+from ._constants import (
+    REF_KEY
+)
 
 logger = get_logger(__name__)
 
@@ -131,7 +134,7 @@ def connected_registry_list_output_format(result):
 
 def list_referrers_output_format(result):
     manifests = []
-    for manifest in result['references']:
+    for manifest in result[REF_KEY]:
         manifests.append(OrderedDict([
             ('Digest', _get_value(manifest, 'digest')),
             ('ArtifactType', _get_value(manifest, 'artifactType')),
@@ -396,7 +399,7 @@ def _token_format_group(item):
     scope_map_id = _get_value(item, 'scopeMapId')
     output = OrderedDict([
         ('NAME', _get_value(item, 'name')),
-        ('SCOPE MAP', scope_map_id.split('/')[-1]),
+        ('SCOPE MAP', scope_map_id.rsplit('/', maxsplit=1)[-1]),
         ('PASSWORD1 EXPIRY', ''),
         ('PASSWORD2 EXPIRY', ''),
         ('STATUS', _get_value(item, 'status').title()),
@@ -521,3 +524,7 @@ def _get_duration(start_time, finish_time):
     except ValueError:
         logger.debug("Unable to get duration with start_time '%s' and finish_time '%s'", start_time, finish_time)
         return ' '
+
+
+def add_timestamp(message):
+    return "{} {}".format(datetime.utcnow(), message)

@@ -10,17 +10,18 @@ import unittest
 from unittest import mock
 
 from azure.cli.core.keys import is_valid_ssh_rsa_public_key
-from azure.cli.command_modules.vm._validators import (validate_ssh_key,
-                                                      _figure_out_storage_source,
-                                                      _validate_admin_username,
-                                                      _validate_admin_password,
-                                                      _parse_image_argument,
-                                                      process_disk_or_snapshot_create_namespace,
-                                                      _validate_vmss_create_subnet,
-                                                      _get_next_subnet_addr_suffix,
-                                                      _validate_vm_vmss_msi,
-                                                      _validate_vm_vmss_accelerated_networking)
-from azure.cli.command_modules.vm._vm_utils import normalize_disk_info, update_disk_sku_info
+from azure.cli.command_modules.vm.azure_stack._validators import (validate_ssh_key,
+                                                                  _figure_out_storage_source,
+                                                                  _validate_admin_username,
+                                                                  _validate_admin_password,
+                                                                  _parse_image_argument,
+                                                                  process_disk_create_namespace,
+                                                                  process_snapshot_create_namespace,
+                                                                  _validate_vmss_create_subnet,
+                                                                  _get_next_subnet_addr_suffix,
+                                                                  _validate_vm_vmss_msi,
+                                                                  _validate_vm_vmss_accelerated_networking)
+from azure.cli.command_modules.vm.azure_stack._vm_utils import normalize_disk_info, update_disk_sku_info
 from azure.cli.core.mock import DummyCli
 from knack.util import CLIError
 
@@ -86,15 +87,24 @@ class TestActions(unittest.TestCase):
 
     def test_figure_out_storage_source(self):
         test_data = 'https://av123images.blob.core.windows.net/images/TDAZBET.vhd'
-        src_blob_uri, src_disk, src_snapshot, _ = _figure_out_storage_source(DummyCli(), 'tg1', test_data)
+        src_blob_uri, src_disk, src_snapshot, src_restore_point, _ = _figure_out_storage_source(DummyCli(), 'tg1', test_data)
         self.assertFalse(src_disk)
         self.assertFalse(src_snapshot)
+        self.assertFalse(src_restore_point)
         self.assertEqual(src_blob_uri, test_data)
 
         test_data = '/subscriptions/0b1f6471-1bf0-4dda-aec3-cb9272f09590/resourceGroups/JAVACSMRG6017/providers/Microsoft.Compute/disks/ex.vhd'
-        src_blob_uri, src_disk, src_snapshot, _ = _figure_out_storage_source(None, 'tg1', test_data)
+        src_blob_uri, src_disk, src_snapshot, src_restore_point, _ = _figure_out_storage_source(None, 'tg1', test_data)
         self.assertEqual(src_disk, test_data)
         self.assertFalse(src_snapshot)
+        self.assertFalse(src_restore_point)
+        self.assertFalse(src_blob_uri)
+
+        test_data = '/subscriptions/0b1f6471-1bf0-4dda-aec3-cb9272f09590/resourceGroups/qinkaiwu-test/providers/Microsoft.Compute/restorePointCollections/vm_rpc/restorePoints/vm_rp'
+        src_blob_uri, src_disk, src_snapshot, src_restore_point, _ = _figure_out_storage_source(None, 'tg1', test_data)
+        self.assertFalse(src_disk)
+        self.assertFalse(src_snapshot)
+        self.assertEqual(src_restore_point, test_data)
         self.assertFalse(src_blob_uri)
 
     def test_source_storage_account_err_case(self):
@@ -108,11 +118,13 @@ class TestActions(unittest.TestCase):
         # action (should throw)
         kwargs = {'namespace': np}
         with self.assertRaises(CLIError):
-            process_disk_or_snapshot_create_namespace(cmd, **kwargs)
+            process_disk_create_namespace(cmd, **kwargs)
+            process_snapshot_create_namespace(cmd, **kwargs)
 
         # with blob uri, should be fine
         np.source = 'https://s1.blob.core.windows.net/vhds/s1.vhd'
-        process_disk_or_snapshot_create_namespace(cmd, **kwargs)
+        process_disk_create_namespace(cmd, **kwargs)
+        process_snapshot_create_namespace(cmd, **kwargs)
 
     def test_validate_admin_username_linux(self):
         # pylint: disable=line-too-long
@@ -178,7 +190,7 @@ class TestActions(unittest.TestCase):
             _validate_admin_password(admin_password, is_linux)
         self.assertTrue(expected_err in str(context.exception))
 
-    @mock.patch('azure.cli.command_modules.vm._validators._compute_client_factory', autospec=True)
+    @mock.patch('azure.cli.command_modules.vm.azure_stack._validators._compute_client_factory', autospec=True)
     def test_parse_image_argument(self, client_factory_mock):
         compute_client = mock.MagicMock()
         image = mock.MagicMock()
@@ -203,8 +215,8 @@ class TestActions(unittest.TestCase):
         self.assertEqual('product1', np.plan_product)
         self.assertEqual('publisher1', np.plan_publisher)
 
-    @mock.patch('azure.cli.command_modules.vm._validators._compute_client_factory', autospec=True)
-    @mock.patch('azure.cli.command_modules.vm._validators.logger.warning', autospec=True)
+    @mock.patch('azure.cli.command_modules.vm.azure_stack._validators._compute_client_factory', autospec=True)
+    @mock.patch('azure.cli.command_modules.vm.azure_stack._validators.logger.warning', autospec=True)
     def test_parse_staging_image_argument(self, logger_mock, client_factory_mock):
         from azure.core.exceptions import ResourceNotFoundError
         compute_client = mock.MagicMock()
@@ -283,7 +295,7 @@ class TestActions(unittest.TestCase):
         _validate_vmss_create_subnet(np_mock)
         self.assertEqual(np_mock.app_gateway_subnet_address_prefix, '10.0.8.0/24')
 
-    @mock.patch('azure.cli.command_modules.vm._validators._resolve_role_id', autospec=True)
+    @mock.patch('azure.cli.command_modules.vm.azure_stack._validators._resolve_role_id', autospec=True)
     @mock.patch('azure.cli.core.commands.client_factory.get_subscription_id', autospec=True)
     def test_validate_msi_on_create(self, mock_get_subscription, mock_resolve_role_id):
         # check throw on : az vm/vmss create --assign-identity --role reader --scope ""
@@ -336,7 +348,7 @@ class TestActions(unittest.TestCase):
         self.assertEqual(np_mock.identity_role, 'reader')
         mock_resolve_role_id.assert_called_with(cmd.cli_ctx, 'reader', 'foo-scope')
 
-    @mock.patch('azure.cli.command_modules.vm._validators._resolve_role_id', autospec=True)
+    @mock.patch('azure.cli.command_modules.vm.azure_stack._validators._resolve_role_id', autospec=True)
     def test_validate_msi_on_assign_identity_command(self, mock_resolve_role_id):
         # check throw on : az vm/vmss assign-identity --role reader --scope ""
         np_mock = mock.MagicMock()
@@ -348,7 +360,8 @@ class TestActions(unittest.TestCase):
         from azure.cli.core.azclierror import ArgumentUsageError
         with self.assertRaises(ArgumentUsageError) as err:
             _validate_vm_vmss_msi(cmd, np_mock, is_identity_assign=True)
-        self.assertTrue("usage error: please specify --scope when assigning a role to the managed identity"
+        self.assertTrue("usage error: please specify both --role and --scope "
+                        "when assigning a role to the managed identity"
                         in str(err.exception))
 
         # check we set right role id
@@ -413,7 +426,7 @@ class TestActions(unittest.TestCase):
             normalize_disk_info(data_disk_cachings=['ReadWrite'], data_disk_sizes_gb=[1, 2], size='standard_L16s_v2')
         self.assertTrue('for Lv series of machines, "None" is the only supported caching mode' in str(err.exception))
 
-    @mock.patch('azure.cli.command_modules.vm._validators._compute_client_factory', autospec=True)
+    @mock.patch('azure.cli.command_modules.vm.azure_stack._validators._compute_client_factory', autospec=True)
     def test_validate_vm_vmss_accelerated_networking(self, client_factory_mock):
         client_mock, size_mock = mock.MagicMock(), mock.MagicMock()
         client_mock.virtual_machine_sizes.list.return_value = [size_mock]
@@ -500,7 +513,7 @@ class TestActions(unittest.TestCase):
         for test_sku, expected in sku_tests.values():
             if isinstance(expected, dict):
                 # build info dict from expected values.
-                info_dict = {lun: dict(managedDisk={'storageAccountType': None}) for lun in expected if lun != "os"}
+                info_dict = {lun: {"managedDisk": {'storageAccountType': None}} for lun in expected if lun != "os"}
                 if "os" in expected:
                     info_dict["os"] = {}
 
@@ -512,7 +525,10 @@ class TestActions(unittest.TestCase):
                         self.assertEqual(info_dict[lun]['managedDisk']['storageAccountType'], expected[lun])
             elif expected is None:
                 dummy_expected = ["os", 1, 2]
-                info_dict = {lun: dict(managedDisk={'storageAccountType': None}) for lun in dummy_expected if lun != "os"}
+                info_dict = {
+                    lun: {"managedDisk": {'storageAccountType': None}}
+                    for lun in dummy_expected if lun != "os"
+                }
                 if "os" in dummy_expected:
                     info_dict["os"] = {}
 

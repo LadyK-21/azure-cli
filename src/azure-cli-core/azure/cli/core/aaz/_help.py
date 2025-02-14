@@ -20,10 +20,9 @@ except ImportError:
 # pylint: disable=protected-access
 
 shorthand_help_messages = {
-    "show-help": 'Try `??` to show more.',
-    "short-summery": 'Shorthand syntax supported.',
-    "long-summery": 'See https://github.com/Azure/azure-cli/tree/dev/doc/shorthand_syntax.md '
-                    'for more about shorthand syntax.'
+    "show-help": 'Try "??" to show more.',
+    "short-summary": 'Support shorthand-syntax, json-file and yaml-file.',
+    "long-summary": 'See https://aka.ms/cli-shorthand for more about shorthand syntax.'
 }
 
 
@@ -35,7 +34,7 @@ class AAZShowHelp(BaseException):
         self.schema = None
 
     def show(self):
-        from ._arg import AAZObjectArg, AAZDictArg, AAZListArg, AAZBaseArg
+        from ._arg import AAZObjectArg, AAZDictArg, AAZFreeFormDictArg, AAZListArg, AAZBaseArg
         assert self.schema is not None and isinstance(self.schema, AAZBaseArg)
         schema = self.schema
         schema_key = self.keys[0]
@@ -44,12 +43,12 @@ class AAZShowHelp(BaseException):
             key = self.keys[idx]
             if isinstance(schema, AAZObjectArg):
                 try:
-                    schema = schema[key]
+                    schema = schema[key]  # pylint: disable=unsubscriptable-object
                 except AAZUndefinedValueError:
                     # show the help of current schema
                     break
                 key = f'.{key}'
-            elif isinstance(schema, AAZDictArg):
+            elif isinstance(schema, (AAZDictArg, AAZFreeFormDictArg)):
                 try:
                     schema = schema.Element
                 except AAZUnknownFieldError:
@@ -92,11 +91,11 @@ class AAZShowHelp(BaseException):
         else:
             _print_indent(f"{key}{FIRST_LINE_PREFIX}{schema_type}", indent=1)
 
-        short_summary = cls._build_short_summery(schema)
+        short_summary = cls._build_short_summary(schema)
         if short_summary:
             _print_indent(short_summary, indent=2)
 
-        long_summary = cls._build_long_summery(schema)
+        long_summary = cls._build_long_summary(schema)
         if long_summary:
             _print_indent(long_summary, indent=2)
 
@@ -109,15 +108,18 @@ class AAZShowHelp(BaseException):
         max_header_len = 0
 
         for prop_schema in schema._fields.values():
+            if not prop_schema._registered:
+                # ignore unregistered args
+                continue
+
             prop_tags = cls._build_schema_tags(prop_schema)
             prop_name = ' '.join(prop_schema._options)
 
-            prop_short_summary = cls._build_short_summery(prop_schema, is_prop=True)
+            prop_short_summary = cls._build_short_summary(prop_schema, is_prop=True)
 
             prop_group_name = prop_schema._arg_group or ""
             header_len = len(prop_name) + len(prop_tags) + (1 if prop_tags else 0)
-            if header_len > max_header_len:
-                max_header_len = header_len
+            max_header_len = max(max_header_len, header_len)
             layouts.append({
                 "name": prop_name,
                 "tags": prop_tags,
@@ -149,7 +151,7 @@ class AAZShowHelp(BaseException):
         return tags
 
     @staticmethod
-    def _build_short_summery(schema, is_prop=False):
+    def _build_short_summary(schema, is_prop=False):
         from ._arg import AAZSimpleTypeArg, AAZCompoundTypeArg
         short_summary = schema._help.get("short-summary", "")
 
@@ -160,14 +162,14 @@ class AAZShowHelp(BaseException):
                     short_summary += '  '
                 short_summary += 'Allowed values: {}.'.format(', '.join(sorted([str(x) for x in choices])))
         elif isinstance(schema, AAZCompoundTypeArg):
-            if short_summary:
-                short_summary += '  '
             if is_prop:
+                if short_summary:
+                    short_summary += '  '
                 short_summary += shorthand_help_messages['show-help']
         return short_summary
 
     @staticmethod
-    def _build_long_summery(schema):
+    def _build_long_summary(schema):
         from ._arg import AAZCompoundTypeArg
         lines = []
         long_summary = schema._help.get("long-summary", "")
@@ -175,7 +177,7 @@ class AAZShowHelp(BaseException):
             lines.append(long_summary)
 
         if isinstance(schema, AAZCompoundTypeArg):
-            lines.append(shorthand_help_messages['long-summery'])
+            lines.append(shorthand_help_messages['long-summary'])
 
         if schema._is_preview:
             preview = status_tag_messages['preview'].format("This argument")

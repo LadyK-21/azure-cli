@@ -15,7 +15,8 @@ from azure.cli.command_modules.vm._validators import (validate_ssh_key,
                                                       _validate_admin_username,
                                                       _validate_admin_password,
                                                       _parse_image_argument,
-                                                      process_disk_or_snapshot_create_namespace,
+                                                      process_disk_create_namespace,
+                                                      process_snapshot_create_namespace,
                                                       _validate_vmss_create_subnet,
                                                       _get_next_subnet_addr_suffix,
                                                       _validate_vm_vmss_msi,
@@ -109,15 +110,24 @@ class TestActions(unittest.TestCase):
 
     def test_figure_out_storage_source(self):
         test_data = 'https://av123images.blob.core.windows.net/images/TDAZBET.vhd'
-        src_blob_uri, src_disk, src_snapshot, _ = _figure_out_storage_source(DummyCli(), 'tg1', test_data)
+        src_blob_uri, src_disk, src_snapshot, src_restore_point, _ = _figure_out_storage_source(DummyCli(), 'tg1', test_data)
         self.assertFalse(src_disk)
         self.assertFalse(src_snapshot)
+        self.assertFalse(src_restore_point)
         self.assertEqual(src_blob_uri, test_data)
 
         test_data = '/subscriptions/0b1f6471-1bf0-4dda-aec3-cb9272f09590/resourceGroups/JAVACSMRG6017/providers/Microsoft.Compute/disks/ex.vhd'
-        src_blob_uri, src_disk, src_snapshot, _ = _figure_out_storage_source(None, 'tg1', test_data)
+        src_blob_uri, src_disk, src_snapshot, src_restore_point, _ = _figure_out_storage_source(None, 'tg1', test_data)
         self.assertEqual(src_disk, test_data)
         self.assertFalse(src_snapshot)
+        self.assertFalse(src_restore_point)
+        self.assertFalse(src_blob_uri)
+        
+        test_data = '/subscriptions/0b1f6471-1bf0-4dda-aec3-cb9272f09590/resourceGroups/qinkaiwu-test/providers/Microsoft.Compute/restorePointCollections/vm_rpc/restorePoints/vm_rp'
+        src_blob_uri, src_disk, src_snapshot, src_restore_point, _ = _figure_out_storage_source(None, 'tg1', test_data)
+        self.assertFalse(src_disk)
+        self.assertFalse(src_snapshot)
+        self.assertEqual(src_restore_point, test_data)
         self.assertFalse(src_blob_uri)
 
     def test_source_storage_account_err_case(self):
@@ -131,11 +141,13 @@ class TestActions(unittest.TestCase):
         # action (should throw)
         kwargs = {'namespace': np}
         with self.assertRaises(CLIError):
-            process_disk_or_snapshot_create_namespace(cmd, **kwargs)
+            process_disk_create_namespace(cmd, **kwargs)
+            process_snapshot_create_namespace(cmd, **kwargs)
 
         # with blob uri, should be fine
         np.source = 'https://s1.blob.core.windows.net/vhds/s1.vhd'
-        process_disk_or_snapshot_create_namespace(cmd, **kwargs)
+        process_disk_create_namespace(cmd, **kwargs)
+        process_snapshot_create_namespace(cmd, **kwargs)
 
     def test_validate_admin_username_linux(self):
         # pylint: disable=line-too-long
@@ -361,7 +373,8 @@ class TestActions(unittest.TestCase):
         from azure.cli.core.azclierror import ArgumentUsageError
         with self.assertRaises(ArgumentUsageError) as err:
             _validate_vm_vmss_msi(cmd, np_mock, is_identity_assign=True)
-        self.assertTrue("usage error: please specify --scope when assigning a role to the managed identity"
+        self.assertTrue("usage error: please specify both --role and --scope "
+                        "when assigning a role to the managed identity"
                         in str(err.exception))
 
         # check we set right role id
@@ -649,7 +662,7 @@ class TestActions(unittest.TestCase):
         for test_sku, expected in sku_tests.values():
             if isinstance(expected, dict):
                 # build info dict from expected values.
-                info_dict = {lun: dict(managedDisk={'storageAccountType': None}) for lun in expected if lun != "os"}
+                info_dict = {lun: {"managedDisk": {'storageAccountType': None}} for lun in expected if lun != "os"}
                 if "os" in expected:
                     info_dict["os"] = {}
 
@@ -661,7 +674,10 @@ class TestActions(unittest.TestCase):
                         self.assertEqual(info_dict[lun]['managedDisk']['storageAccountType'], expected[lun])
             elif expected is None:
                 dummy_expected = ["os", 1, 2]
-                info_dict = {lun: dict(managedDisk={'storageAccountType': None}) for lun in dummy_expected if lun != "os"}
+                info_dict = {
+                    lun: {"managedDisk": {'storageAccountType': None}}
+                    for lun in dummy_expected if lun != "os"
+                }
                 if "os" in dummy_expected:
                     info_dict["os"] = {}
 
@@ -671,16 +687,8 @@ class TestActions(unittest.TestCase):
                 self.fail("Test Expected value should be a dict or None, instead it is {}.".format(expected))
 
     def test_process_gallery_image_version_namespace(self):
-        from azure.cli.core.profiles._shared import AZURE_API_PROFILES, ResourceType
         np = mock.MagicMock(spec='target_regions')
-        api_version = AZURE_API_PROFILES['latest'][ResourceType.MGMT_COMPUTE].profile['gallery_images']
-        TargetRegion = self._get_compute_model('TargetRegion', api_version)
-        EncryptionImages = self._get_compute_model('EncryptionImages', api_version)
-        OSDiskImageEncryption = self._get_compute_model('OSDiskImageEncryption', api_version)
-        DataDiskImageEncryption = self._get_compute_model('DataDiskImageEncryption', api_version)
-        ConfidentialVMEncryptionType = self._get_compute_model('ConfidentialVMEncryptionType', api_version)
         cmd = mock.MagicMock()
-        cmd.get_models.return_value = [TargetRegion, EncryptionImages, OSDiskImageEncryption, DataDiskImageEncryption, ConfidentialVMEncryptionType]
 
         target_regions_list = ["southcentralus", "westus=1", "westus2=standard_zrs", "eastus=2=standard_lrs", 'CentralUSEUAP=1']
         np.target_regions = target_regions_list
@@ -688,10 +696,14 @@ class TestActions(unittest.TestCase):
         process_gallery_image_version_namespace(cmd, np)
         target_regions_objs = np.target_regions
 
-        self.assertEqual(target_regions_objs[0], TargetRegion(name="southcentralus"))
-        self.assertEqual(target_regions_objs[1], TargetRegion(name="westus", regional_replica_count=1))
-        self.assertEqual(target_regions_objs[2], TargetRegion(name="westus2", storage_account_type="standard_zrs"))
-        self.assertEqual(target_regions_objs[3], TargetRegion(name="eastus", regional_replica_count=2, storage_account_type="standard_lrs"))
+        self.assertEqual(target_regions_objs[0]["name"], "southcentralus")
+        self.assertEqual(target_regions_objs[1]["name"], "westus")
+        self.assertEqual(target_regions_objs[1]["regional_replica_count"], 1)
+        self.assertEqual(target_regions_objs[2]["name"], "westus2")
+        self.assertEqual(target_regions_objs[2]["storage_account_type"], "standard_zrs")
+        self.assertEqual(target_regions_objs[3]["name"], "eastus")
+        self.assertEqual(target_regions_objs[3]["regional_replica_count"], 2)
+        self.assertEqual(target_regions_objs[3]["storage_account_type"], "standard_lrs")
 
         # handle invalid storage account / replica count
         with self.assertRaises(CLIError):

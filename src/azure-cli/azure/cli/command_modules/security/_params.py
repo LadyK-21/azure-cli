@@ -10,20 +10,20 @@
 from azure.cli.core.commands.parameters import (get_three_state_flag,
                                                 get_enum_type,
                                                 resource_group_name_type)
-from azure.mgmt.security.models._security_center_enums import Enum69
+from azure.mgmt.security.models import SettingName
 from knack.arguments import CLIArgumentType
 from ._validators import (validate_alert_status,
                           validate_auto_provisioning_toggle,
                           validate_pricing_tier,
                           validate_assessment_status_code)
-from .actions import AppendBaselines, AppendBaseline
+from .actions import AppendBaselines, AppendBaseline, GetExtension
 
 name_arg_type = CLIArgumentType(options_list=('--name', '-n'), metavar='NAME', help='name of the resource to be fetched')
 home_region_arg_type = CLIArgumentType(options_list=('--home-region', '-hr'), metavar='HOMEREGION', help='home region that was selected for the subscription')
 location_arg_type = CLIArgumentType(options_list=('--location', '-l'), metavar='LOCATION', help='location of the resource')
 
 # Alerts
-alert_status_arg_type = CLIArgumentType(options_list=('--status'), metavar='STATUS', help='target status of the alert. possible values are "dismiss" and "activate"')
+alert_status_arg_type = CLIArgumentType(options_list=('--status'), metavar='STATUS', help='target status of the alert. possible values are "dismiss", "activate", "resolve" and "inprogress"')
 
 
 # Alerts Suppression Rules
@@ -39,7 +39,8 @@ suppression_rule_scope_contains_arg_type = CLIArgumentType(options_list=('--cont
 suppression_rule_scope_any_of_arg_type = CLIArgumentType(options_list=('--any-of'), metavar='ANYOF', help='A list of strings to scope the suppression rule by.')
 
 # Atp
-storage_account_arg_type = CLIArgumentType(options_list=('--storage-account'), metavar='NAME', help='Name of an existing storage account.')
+storage_account_arg_type = CLIArgumentType(options_list=('--storage-account'), metavar='NAME', help='Name of an existing Storage account.')
+cosmos_db_account_arg_type = CLIArgumentType(options_list=('--cosmosdb-account'), metavar='NAME', help='Name of an existing Cosmos DB account.')
 
 # Sql Vulnerability Assessment
 va_sql_vm_resource_id_arg_type = CLIArgumentType(options_list=('--vm-resource-id'), metavar='VMRESOURCEID', help='Resource ID of the scanned machine. For On-Premise machines, please provide your workspace resource ID')
@@ -57,14 +58,10 @@ va_sql_vm_uuid_arg_type = CLIArgumentType(options_list=('--vm-uuid'), metavar='V
 # Auto Provisioning
 auto_provisioning_auto_provision_arg_type = CLIArgumentType(options_list=('--auto-provision'), metavar='AUTOPROVISION', help='Automatic provisioning toggle. possible values are "On" or "Off"')
 
-# Contacts
-contact_email_arg_type = CLIArgumentType(options_list=('--email'), metavar='EMAIL', help='E-mail of the security contact')
-contact_phone_arg_type = CLIArgumentType(options_list=('--phone'), metavar='PHONE', help='Phone of the security contact')
-contact_alert_notifications_arg_type = CLIArgumentType(options_list=('--alert-notifications'), metavar='ALERTNOTIFICATIONS', help='Whether to send mail notifications to the security contacts')
-contact_alerts_admins_arg_type = CLIArgumentType(options_list=('--alerts-admins'), metavar='ALERTADMINS', help='Whether to send mail notifications to the subscription administrators')
-
 # Pricing
 pricing_tier_arg_type = CLIArgumentType(options_list=('--tier'), metavar='TIER', help='pricing tier type')
+pricing_tier_subplan_arg_type = CLIArgumentType(options_list=('--subplan'), metavar='SUBPLAN', help='bundle suplan', required=False)
+pricing_tier_extensions_arg_type = CLIArgumentType(options_list=('--extensions'), metavar='EXTENSIONS', help='pricing extensions', required=False, action=GetExtension, nargs='*')
 
 # Workspace settings
 workspace_setting_target_workspace_arg_type = CLIArgumentType(options_list=('--target-workspace'), metavar='TARGETWORKSPACE', help='An ID of the workspace resource that will hold the security data')
@@ -72,8 +69,8 @@ workspace_setting_target_workspace_arg_type = CLIArgumentType(options_list=('--t
 # Assessments
 assessment_assessed_resource_id_arg_type = CLIArgumentType(options_list=('--assessed-resource-id'), metavar='ASSESSEDRESOURCEID', help='The target resource for this assessment')
 assessment_additional_data_arg_type = CLIArgumentType(options_list=('--additional-data'), metavar='ADDITIONALDATA', help='Data that is attached to the assessment result for better investigations or status clarity')
-assessment_status_code_arg_type = CLIArgumentType(options_list=('--status-code'), metavar='STATUSCODE', help='Progremmatic code for the result of the assessment. can be "Healthy", "Unhealthy" or "NotApplicable"')
-assessment_status_cause_arg_type = CLIArgumentType(options_list=('--status-cause'), metavar='STATUSCAUSE', help='Progremmatic code for the cause of the assessment result')
+assessment_status_code_arg_type = CLIArgumentType(options_list=('--status-code'), metavar='STATUSCODE', help='Programmatic code for the result of the assessment. can be "Healthy", "Unhealthy" or "NotApplicable"')
+assessment_status_cause_arg_type = CLIArgumentType(options_list=('--status-cause'), metavar='STATUSCAUSE', help='Programmatic code for the cause of the assessment result')
 assessment_status_description_arg_type = CLIArgumentType(options_list=('--status-description'), metavar='STATUSDESCRIPTION', help='Human readable description of the cause of the assessment result')
 
 # Assessment metadata
@@ -102,6 +99,7 @@ adaptive_network_hardenings_resource_adaptive_network_hardenings_resource_name =
 
 # Adaptive Application Controls
 adaptive_application_controls_group_name = CLIArgumentType(option_list=('--group-name'), metave='GROUPNAME', help='Name of an application control VM/server group')
+adaptive_application_controls_location = CLIArgumentType(options_list=('--location', '-l'), metavar='LOCATION', help='Location of the resource. Possible values are "centralsus", "westeurope". Please use "list" operation to get all resources and locations')
 
 # Automations
 automation_scopes_arg_type = CLIArgumentType(options_list=('--scopes'), metavar='SCOPES', help='A collection of scopes on which the security automations logic is applied')
@@ -135,8 +133,6 @@ def load_arguments(self, _):
                   'atp',
                   'va sql',
                   'task',
-                  'setting',
-                  'contact',
                   'auto-provisioning-setting',
                   'discovered-security-solution',
                   'external-security-solution',
@@ -161,6 +157,7 @@ def load_arguments(self, _):
                   'secure-scores',
                   'secure-score-controls',
                   'secure-score-control-definitions',
+                  'security_solutions_reference_data',
                   'setting',
                   'automation'
                   ]:
@@ -175,9 +172,6 @@ def load_arguments(self, _):
             c.argument(
                 'location',
                 arg_type=location_arg_type)
-            c.argument(
-                'storage_account_name',
-                arg_type=storage_account_arg_type)
             c.argument(
                 'vm_resource_id',
                 arg_type=va_sql_vm_resource_id_arg_type)
@@ -199,6 +193,15 @@ def load_arguments(self, _):
             c.argument(
                 'vm_uuid',
                 arg_type=va_sql_vm_uuid_arg_type)
+
+    with self.argument_context('security atp storage') as c:
+        c.argument(
+            'storage_account_name',
+            arg_type=storage_account_arg_type)
+    with self.argument_context('security atp cosmosdb') as c:
+        c.argument(
+            'cosmos_db_account_name',
+            arg_type=cosmos_db_account_arg_type)
 
     for scope in ['regulatory-compliance-controls']:
         with self.argument_context('security {}'.format(scope)) as c:
@@ -286,9 +289,9 @@ def load_arguments(self, _):
                 validator=validate_auto_provisioning_toggle,
                 arg_type=auto_provisioning_auto_provision_arg_type)
 
-    for scope in ['atp storage update']:
+    for scope in ['atp storage update', 'atp cosmosdb update']:
         with self.argument_context('security {}'.format(scope)) as c:
-            c.argument('is_enabled', help='Enable or disable Advanced Threat Protection for a received storage account.', arg_type=get_three_state_flag())
+            c.argument('is_enabled', help='Enable or disable Advanced Threat Protection for a received storage or Cosmos DB account.', arg_type=get_three_state_flag())
 
     for scope in ['va sql scans show',
                   'va sql results']:
@@ -315,27 +318,22 @@ def load_arguments(self, _):
         with self.argument_context('security {}'.format(scope)) as c:
             c.argument('baseline_latest', options_list=('--latest'), metavar='BASELINE', help='Use this argument without parameters to set baseline upon latest scan results', arg_type=get_three_state_flag())
 
-    for scope in ['contact create']:
-        with self.argument_context('security {}'.format(scope)) as c:
-            c.argument(
-                'email',
-                arg_type=contact_email_arg_type)
-            c.argument(
-                'phone',
-                arg_type=contact_phone_arg_type)
-            c.argument(
-                'alert_notifications',
-                arg_type=contact_alert_notifications_arg_type)
-            c.argument(
-                'alerts_admins',
-                arg_type=contact_alerts_admins_arg_type)
-
     for scope in ['pricing create']:
         with self.argument_context('security {}'.format(scope)) as c:
             c.argument(
                 'tier',
                 validator=validate_pricing_tier,
                 arg_type=pricing_tier_arg_type)
+
+            c.argument(
+                'subplan',
+                arg_type=pricing_tier_subplan_arg_type)
+
+            c.argument('baseline', arg_type=va_sql_baseline_multiple_arg_type)
+
+            c.argument(
+                'extensions',
+                arg_type=pricing_tier_extensions_arg_type)
 
     for scope in ['workspace-setting create']:
         with self.argument_context('security {}'.format(scope)) as c:
@@ -439,10 +437,13 @@ def load_arguments(self, _):
             c.argument(
                 'group_name',
                 arg_type=adaptive_application_controls_group_name)
+            c.argument(
+                'location',
+                arg_type=adaptive_application_controls_location)
 
     for scope in ['setting']:
         with self.argument_context('security {}'.format(scope)) as c:
-            c.argument('setting_name', options_list=['--name', '-n'], help='The name of the setting', arg_type=get_enum_type(Enum69))
+            c.argument('setting_name', options_list=['--name', '-n'], help='The name of the setting', arg_type=get_enum_type(SettingName))
             c.argument('enabled', help='Enable or disable the setting status.', arg_type=get_three_state_flag())
 
     for scope in ['automation create_or_update', 'automation validate']:

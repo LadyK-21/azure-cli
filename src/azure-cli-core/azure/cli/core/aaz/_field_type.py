@@ -2,12 +2,20 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
+import abc
+
+from collections import OrderedDict
+
+from azure.cli.core.util import shell_safe_json_parse
 from ._base import AAZBaseType, AAZValuePatch, AAZUndefined
-from ._field_value import AAZObject, AAZDict, AAZList, AAZSimpleValue
+from ._field_value import AAZObject, AAZDict, AAZFreeFormDict, AAZList, AAZSimpleValue, \
+    AAZIdentityObject
+from ._utils import to_snack_case
 from .exceptions import AAZUnknownFieldError, AAZConflictFieldDefinitionError, AAZValuePrecisionLossError, \
-    AAZInvalidFieldError
+    AAZInvalidFieldError, AAZInvalidValueError
 
 # pylint: disable=protected-access, too-few-public-methods, isinstance-second-argument-not-valid-type
+# pylint: disable=too-many-instance-attributes
 
 
 # build in types
@@ -18,19 +26,33 @@ class AAZSimpleType(AAZBaseType):
 
     _ValueCls = AAZSimpleValue
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def process_data(self, data, **kwargs):
-        if data is None:
+        if data == None:  # noqa: E711, pylint: disable=singleton-comparison
+            # data can be None or AAZSimpleValue == None
             if self._nullable:
                 return None
             return AAZValuePatch.build(self)
 
+        if data == AAZUndefined:
+            return AAZValuePatch.build(self)
+
         if isinstance(data, AAZSimpleValue):
+            if data._is_patch:
+                # return value patch
+                return AAZValuePatch.build(self)
+
             data = data._data
-        assert self.DataType is not None and isinstance(data, self.DataType), \
-            f'Expect {self.DataType}, got {data} ({type(data)}'
+
+        assert self.DataType is not None
+        if not isinstance(data, self.DataType):
+            try:
+                json_data = shell_safe_json_parse(data)
+            except:  # pylint:disable=bare-except
+                raise AAZInvalidValueError('Expect {}, got {} ({})'.format(self.DataType, data, type(data)))
+            if not isinstance(json_data, self.DataType):
+                raise AAZInvalidValueError('Expect {}, got {} ({})'.format(self.DataType, data, type(data)))
+            data = json_data
+
         return data
 
 
@@ -50,19 +72,42 @@ class AAZFloatType(AAZSimpleType):
     DataType = float
 
     def process_data(self, data, **kwargs):
-        if data is None:
+        if data == None:  # noqa: E711, pylint: disable=singleton-comparison
+            # data can be None or AAZSimpleValue == None
             if self._nullable:
                 return None
             return AAZValuePatch.build(self)
 
+        if data == AAZUndefined:
+            return AAZValuePatch.build(self)
+
         if isinstance(data, AAZSimpleValue):
+            if data._is_patch:
+                # return value patch
+                return AAZValuePatch.build(self)
+
             data = data._data
+
         if isinstance(data, int):
             # transform int to float
             if float(data) != data:
                 raise AAZValuePrecisionLossError(data, float(data))
             data = float(data)
-        assert isinstance(data, self.DataType), f'Expect {self.DataType}, got {data} ({type(data)}'
+
+        if not isinstance(data, self.DataType):
+            try:
+                json_data = shell_safe_json_parse(data)
+            except:  # pylint:disable=bare-except
+                raise AAZInvalidValueError('Expect {}, got {} ({})'.format(self.DataType, data, type(data)))
+            if isinstance(json_data, int):
+                # transform int to float
+                if float(json_data) != json_data:
+                    raise AAZValuePrecisionLossError(json_data, float(json_data))
+                json_data = float(json_data)
+            if not isinstance(json_data, self.DataType):
+                raise AAZInvalidValueError('Expect {}, got {} ({})'.format(self.DataType, data, type(data)))
+            data = json_data
+
         return data
 
 
@@ -83,12 +128,15 @@ class AAZObjectType(AAZBaseType):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._fields = {}
+        # It's important to keep the order of fields.
+        # This feature can help to resolve arguments interdependent problem.
+        # aaz-dev should register fields based on the interdependent order.
+        self._fields = OrderedDict()
         self._fields_alias_map = {}  # key is the option, value is field
 
         # Polymorphism support
         self._discriminator_field_name = None
-        self._discriminators = {}
+        self._discriminators = OrderedDict()
 
     def __getitem__(self, key):
         name = self.get_attr_name(key)
@@ -145,19 +193,31 @@ class AAZObjectType(AAZBaseType):
             return key
         if key in self._fields_alias_map:
             return self._fields_alias_map[key]
+        if isinstance(key, str) and key != key.lower():
+            # if key is not found convert camel case key to snack case key
+            key = to_snack_case(key)
+            if key in self._fields:
+                return key
         return None
 
     def process_data(self, data, **kwargs):
-        if data is None:
+        if data == None:  # noqa: E711, pylint: disable=singleton-comparison
+            # data can be None or AAZSimpleValue == None
             if self._nullable:
                 return None
             return AAZValuePatch.build(self)
 
-        result = {}
+        if data == AAZUndefined:
+            return AAZValuePatch.build(self)
+
+        if isinstance(data, AAZObject) and data._is_patch:
+            # use value patch
+            result = AAZValuePatch.build(self)
+        else:
+            result = {}
         value = AAZObject(schema=self, data=result)
 
         if isinstance(data, AAZObject):
-
             if self._discriminator_field_name:
                 # assign discriminator field first
                 for key in data._data.keys():
@@ -173,7 +233,8 @@ class AAZObjectType(AAZBaseType):
                 value[key] = data[key]
 
         else:
-            assert isinstance(data, (dict,))
+            if not isinstance(data, dict):
+                raise AAZInvalidValueError("Expect <class 'dict'>, got {} ({})".format(data, type(data)))
 
             if self._discriminator_field_name:
                 # assign discriminator field first
@@ -217,19 +278,58 @@ class AAZObjectType(AAZBaseType):
             return None
         if isinstance(data, AAZObject):
             data = data._data
-        assert isinstance(data, dict)
-        if self._discriminator_field_name not in data:
-            return None
+        if not isinstance(data, dict):
+            raise AAZInvalidValueError("Expect <class 'dict'>, got {} ({})".format(data, type(data)))
 
-        field_data = data[self._discriminator_field_name]  # get discriminator field data
-        return self._discriminators.get(field_data, None)
+        for key, field_data in data.items():
+            name = self.get_attr_name(key)
+            if name == self._discriminator_field_name:
+                return self._discriminators.get(field_data, None)
+        return None
 
 
-class AAZDictType(AAZBaseType):
+class AAZBaseDictType(AAZBaseType):
+
+    _PatchDataCls = dict
+
+    @abc.abstractmethod
+    def __getitem__(self, key):
+        raise NotImplementedError()
+
+    def process_data(self, data, **kwargs):
+        if data == None:  # noqa: E711, pylint: disable=singleton-comparison
+            # data can be None or AAZSimpleValue == None
+            if self._nullable:
+                return None
+            return AAZValuePatch.build(self)
+
+        if data == AAZUndefined:
+            return AAZValuePatch.build(self)
+
+        if isinstance(data, self._ValueCls) and data._is_patch:
+            # use value patch
+            result = AAZValuePatch.build(self)
+        else:
+            result = {}
+
+        value = self._ValueCls(schema=self, data=result)  # pylint: disable=not-callable
+
+        if isinstance(data, self._ValueCls):
+            for key in data._data.keys():
+                value[key] = data[key]
+        else:
+            if not isinstance(data, dict):
+                raise AAZInvalidValueError("Expect <class 'dict'>, got {} ({})".format(data, type(data)))
+
+            for key, sub_data in data.items():
+                value[key] = sub_data
+        return result
+
+
+class AAZDictType(AAZBaseDictType):
     """Dict value type"""
 
     _ValueCls = AAZDict
-    _PatchDataCls = dict
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -255,22 +355,14 @@ class AAZDictType(AAZBaseType):
     def __getitem__(self, key):
         return self.Element
 
-    def process_data(self, data, **kwargs):
-        if data is None:
-            if self._nullable:
-                return None
-            return AAZValuePatch.build(self)
 
-        result = {}
-        value = AAZDict(schema=self, data=result)
-        if isinstance(data, AAZDict):
-            for key in data._data.keys():
-                value[key] = data[key]
-        else:
-            assert isinstance(data, (dict,))
-            for key, sub_data in data.items():
-                value[key] = sub_data
-        return result
+class AAZFreeFormDictType(AAZBaseDictType):
+    """Free form dict value type"""
+
+    _ValueCls = AAZFreeFormDict
+
+    def __getitem__(self, key):
+        return None
 
 
 class AAZListType(AAZBaseType):
@@ -304,20 +396,34 @@ class AAZListType(AAZBaseType):
         return self.Element
 
     def process_data(self, data, **kwargs):
-        if data is None:
+        if data == None:  # noqa: E711, pylint: disable=singleton-comparison
+            # data can be None or AAZSimpleValue == None
             if self._nullable:
                 return None
             return AAZValuePatch.build(self)
 
-        result = {}
+        if data == AAZUndefined:
+            return AAZValuePatch.build(self)
+
+        if isinstance(data, AAZList) and data._is_patch:
+            # use value patch
+            result = AAZValuePatch.build(self)
+        else:
+            result = {}
         value = AAZList(schema=self, data=result)
 
         if isinstance(data, AAZList):
             for idx in data._data.keys():
                 value[idx] = data[idx]
         else:
-            assert isinstance(data, list)
+            if not isinstance(data, list):
+                raise AAZInvalidValueError("Expect <class 'list'>, got {} ({})".format(data, type(data)))
+
             for idx, sub_data in enumerate(data):
                 value[idx] = sub_data
 
         return result
+
+
+class AAZIdentityObjectType(AAZObjectType):
+    _ValueCls = AAZIdentityObject

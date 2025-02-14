@@ -105,17 +105,18 @@ def cf_kusto_pool(cli_ctx, *_):
 def synapse_spark_factory(cli_ctx, workspace_name, sparkpool_name):
     from azure.synapse.spark import SparkClient
     from azure.cli.core._profile import Profile
+    # Uncomment this line after SparkClient is fixed. See https://github.com/Azure/azure-cli/pull/30788
+    # from azure.cli.core.auth.util import resource_to_scopes
     from azure.cli.core.commands.client_factory import get_subscription_id
     subscription_id = get_subscription_id(cli_ctx)
     profile = Profile(cli_ctx=cli_ctx)
-    cred, _, _ = profile.get_login_credentials(
-        resource=cli_ctx.cloud.endpoints.synapse_analytics_resource_id,
-        subscription_id=subscription_id
-    )
+    cred, _, _ = profile.get_login_credentials(subscription_id=subscription_id)
     return SparkClient(
         credential=cred,
         endpoint='{}{}{}'.format("https://", workspace_name, cli_ctx.cloud.suffixes.synapse_analytics_endpoint),
-        spark_pool_name=sparkpool_name
+        spark_pool_name=sparkpool_name,
+        # Uncomment this line after SparkClient is fixed
+        # credential_scopes=resource_to_scopes(cli_ctx.cloud.endpoints.synapse_analytics_resource_id)
     )
 
 
@@ -130,16 +131,15 @@ def cf_synapse_spark_session(cli_ctx, workspace_name, sparkpool_name):
 def synapse_accesscontrol_factory(cli_ctx, workspace_name):
     from azure.synapse.accesscontrol import AccessControlClient
     from azure.cli.core._profile import Profile
+    from azure.cli.core.auth.util import resource_to_scopes
     from azure.cli.core.commands.client_factory import get_subscription_id
     subscription_id = get_subscription_id(cli_ctx)
     profile = Profile(cli_ctx=cli_ctx)
-    cred, _, _ = profile.get_login_credentials(
-        resource=cli_ctx.cloud.endpoints.synapse_analytics_resource_id,
-        subscription_id=subscription_id
-    )
+    cred, _, _ = profile.get_login_credentials(subscription_id=subscription_id)
     return AccessControlClient(
         credential=cred,
-        endpoint='{}{}{}'.format("https://", workspace_name, cli_ctx.cloud.suffixes.synapse_analytics_endpoint)
+        endpoint='{}{}{}'.format("https://", workspace_name, cli_ctx.cloud.suffixes.synapse_analytics_endpoint),
+        credential_scopes=resource_to_scopes(cli_ctx.cloud.endpoints.synapse_analytics_resource_id)
     )
 
 
@@ -152,31 +152,23 @@ def cf_synapse_role_definitions(cli_ctx, workspace_name):
 
 
 def cf_graph_client_factory(cli_ctx, **_):
-    from azure.cli.core._profile import Profile
-    from azure.cli.core.commands.client_factory import configure_common_settings
-    from azure.graphrbac import GraphRbacManagementClient
-    profile = Profile(cli_ctx=cli_ctx)
-    cred, _, tenant_id = profile.get_login_credentials(
-        resource=cli_ctx.cloud.endpoints.active_directory_graph_resource_id)
-    client = GraphRbacManagementClient(cred, tenant_id,
-                                       base_url=cli_ctx.cloud.endpoints.active_directory_graph_resource_id)
-    configure_common_settings(cli_ctx, client)
-    return client
+    from azure.cli.command_modules.role import graph_client_factory
+    graph_client = graph_client_factory(cli_ctx)
+    return graph_client
 
 
 def cf_synapse_client_artifacts_factory(cli_ctx, workspace_name):
     from azure.synapse.artifacts import ArtifactsClient
     from azure.cli.core._profile import Profile
+    from azure.cli.core.auth.util import resource_to_scopes
     from azure.cli.core.commands.client_factory import get_subscription_id
     subscription_id = get_subscription_id(cli_ctx)
     profile = Profile(cli_ctx=cli_ctx)
-    cred, _, _ = profile.get_login_credentials(
-        resource=cli_ctx.cloud.endpoints.synapse_analytics_resource_id,
-        subscription_id=subscription_id
-    )
+    cred, _, _ = profile.get_login_credentials(subscription_id=subscription_id)
     return ArtifactsClient(
         credential=cred,
-        endpoint='{}{}{}'.format("https://", workspace_name, cli_ctx.cloud.suffixes.synapse_analytics_endpoint)
+        endpoint='{}{}{}'.format("https://", workspace_name, cli_ctx.cloud.suffixes.synapse_analytics_endpoint),
+        credential_scopes=resource_to_scopes(cli_ctx.cloud.endpoints.synapse_analytics_resource_id)
     )
 
 
@@ -221,18 +213,17 @@ def cf_synapse_library(cli_ctx, workspace_name):
 
 
 def cf_synapse_client_managedprivateendpoints_factory(cli_ctx, workspace_name):
-    from azure.synapse.managedprivateendpoints import ManagedPrivateEndpointsClient
+    from azure.synapse.managedprivateendpoints import VnetClient
     from azure.cli.core._profile import Profile
+    from azure.cli.core.auth.util import resource_to_scopes
     from azure.cli.core.commands.client_factory import get_subscription_id
     subscription_id = get_subscription_id(cli_ctx)
     profile = Profile(cli_ctx=cli_ctx)
-    cred, _, _ = profile.get_login_credentials(
-        resource=cli_ctx.cloud.endpoints.synapse_analytics_resource_id,
-        subscription_id=subscription_id
-    )
-    return ManagedPrivateEndpointsClient(
+    cred, _, _ = profile.get_login_credentials(subscription_id=subscription_id)
+    return VnetClient(
         credential=cred,
-        endpoint='{}{}{}'.format("https://", workspace_name, cli_ctx.cloud.suffixes.synapse_analytics_endpoint)
+        endpoint='{}{}{}'.format("https://", workspace_name, cli_ctx.cloud.suffixes.synapse_analytics_endpoint),
+        credential_scopes=resource_to_scopes(cli_ctx.cloud.endpoints.synapse_analytics_resource_id)
     )
 
 
@@ -254,3 +245,11 @@ def cf_kusto_scripts(cli_ctx, workspace_name):
 
 def cf_synapse_sql_script(cli_ctx, workspace_name):
     return cf_synapse_client_artifacts_factory(cli_ctx, workspace_name).sql_script
+
+
+def cf_synapse_client_azure_ad_only_authentications_factory(cli_ctx, *_):
+    return cf_synapse(cli_ctx).azure_ad_only_authentications
+
+
+def cf_synapse_link_connection(cli_ctx, workspace_name):
+    return cf_synapse_client_artifacts_factory(cli_ctx, workspace_name).link_connection
